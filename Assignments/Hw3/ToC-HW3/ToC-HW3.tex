@@ -1,0 +1,716 @@
+\documentclass[letterpaper,11pt,twoside]{article}
+\usepackage[margin=0.88in]{geometry}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\mypdfauthor{Dimitris Diochnos}
+\def\mypdfsubject{Undergraduate Course}
+\def\mypdftitle{CS 3823 - Theory of Computation, 2025F: HW3}
+\def\myheadertitle{CS 3823 - Theory of Computation: Homework Assignment 3}
+\def\mytitle{CS 3823 - Theory of Computation: Homework Assignment 3}
+\def\thecurrentsemester{Fall 2025}
+\def\myduedate{\textbf{Due:} Tuesday, November 4, 2025}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{xspace}
+\usepackage{enumitem}
+\usepackage[numbers,square,sort&compress]{natbib}
+\usepackage[euler-digits, T1]{eulervm}
+\usepackage{upgreek}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[
+   colorlinks%
+   ,plainpages=false%This forces a unique identification of pages.
+   ,hypertexnames=true%This is necessary to have exact link on Index page.
+   ,naturalnames
+   ,hyperindex
+   ,citecolor=OliveGreen
+   ,urlcolor=RoyalBlue
+   ,pdfauthor={\mypdfauthor}
+   ,pdftitle={\mypdftitle}
+   ,pdfsubject={\mypdfsubject}
+   %,pdfkeywords={...}
+]{hyperref}
+\usepackage{psfrag}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{tikz}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+\setlength{\headheight}{14pt}
+\fancypagestyle{firststyle}
+{
+   \fancyhf{}
+   \fancyfoot[L]{\today}
+   \fancyfoot[R]{\thepage/\pageref*{LastPage}}
+}
+\newcommand{\stylishPagesColor}{Gray}
+\newcommand{\stylishHref}[2]%
+{\hypersetup{urlcolor=\stylishPagesColor}%
+\href{#1}{#2}%
+\hypersetup{urlcolor=RoyalBlue}}
+\fancyhead{} % clear all header fields
+\fancyhead[CO,CE]{\textsc{\myheadertitle}}
+\fancyfoot{} % clear all footer fields
+%\fancyfoot[LO,RE]{\today}
+\fancyfoot[LO,RE]{October 24, 2025}
+%\fancyfoot[CO,CE]{\thepage/\pageref*{LastPage}}
+\fancyfoot[RO,LE]{\thepage/\pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.0pt}
+\renewcommand{\footrulewidth}{0.0pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% So that absolute values and norms are neat.
+\usepackage{amsmath}
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+% Sets
+\providecommand{\set}[1]{\ensuremath{\left\{#1\right\}}\xspace}
+\providecommand{\powerset}[1]{\ensuremath{\mathcal{P}\left( #1\right)}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\providecommand{\emptystring}{\ensuremath{\varepsilon}\xspace}
+\newcommand{\regexpunion}{\ensuremath{\cup}\xspace}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{color}
+\definecolor{RoyalBlue}{cmyk}{1, 0.50, 0, 0}
+\definecolor{ForestGreen}{cmyk}{0.864, 0.0, 0.429, 0.396}
+\definecolor{Brown}{cmyk}{0.0,0.692,0.925,0.529}
+
+\newcommand{\WriteRed}[1]{{\color{red} #1 }\xspace}
+\newcommand{\WriteRoyalBlue}[1]{{\color{RoyalBlue} #1 }\xspace}
+\newcommand{\WriteForestGreen}[1]{{\color{ForestGreen} #1 }\xspace}
+\newcommand{\WriteBrown}[1]{{\color{Brown} #1 }\xspace}
+\newcommand{\WriteCustomColor}[1]{{\color{blue} #1 }\xspace}
+\newcommand{\WriteSolutions}[1]{\WriteCustomColor{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\us}{\selectlanguage{american}}
+\newcommand{\gr}{\selectlanguage{greek}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\jflapurl{http://www.jflap.org}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\author{
+\textsc{\thecurrentsemester} \hspace{3cm}\myduedate
+}
+\title{\mytitle}
+\date{}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\thispagestyle{firststyle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\vspace{-0.5cm}
+\noindent\makebox[\linewidth]{\rule{\columnwidth}{2pt}}
+
+%\section*{General Information}
+\noindent\textbf{Related Reading.} Sections 3.3, 4.3, 5.1, 5.2, 6.1, 6.2, 7.1\\
+\noindent\textbf{Instructions.} Near the top of the first page of your solutions please list clearly \textbf{all} the members of the group (\underline{please see the syllabus for the collaboration policy}) who have created the solutions that you are submitting. Listing the names of the people in the group implies their full name and their 4x4 IDs.
+Alternatively, you can use the space below and provide the relevant information 
+in case you submit the solutions using this document.\\ 
+\noindent\makebox[\linewidth]{\rule{\columnwidth}{2pt}}
+
+
+
+
+\begin{center}
+\textbf{Student Information for the Solutions Submitted}
+\end{center}
+
+\begin{center}
+\begin{tabular}{c|c|c|}\cline{2-3}
+ & Lastname, Firstname
+ & 4x4 ID (e.g., dioc0000)
+ \\\hline
+%\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{1}}}
+\multicolumn{1}{|c|}{\multirow{2}{*}{1}}
+& \multirow{2}{*}{\textbf{\large Frison, Colby}} & \multirow{2}{*}{\textbf{\large fris0010}} \\
+\multicolumn{1}{|c|}{}
+           & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+%\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{2}}}
+\multicolumn{1}{|c|}{\multirow{2}{*}{2}}
+& \multirow{2}{*}{\textbf{\large Ward, Levin}} & \multirow{2}{*}{\textbf{\large ward0209}} \\
+\multicolumn{1}{|c|}{}
+           & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+%\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{3}}}
+\multicolumn{1}{|c|}{\multirow{2}{*}{3}}
+& \multirow{2}{*}{\textbf{\large Wage, Edward}} & \multirow{2}{*}{\textbf{\large wage0008}} \\
+\multicolumn{1}{|c|}{}
+           & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+%\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{4}}}
+\multicolumn{1}{|c|}{\multirow{2}{*}{4}}
+& \multirow{2}{*}{\textbf{\large Mosisa, Joy}} & \multirow{2}{*}{\textbf{\large mosi0010}} \\
+\multicolumn{1}{|c|}{}
+           & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+%\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{5}}}
+\multicolumn{1}{|c|}{\multirow{2}{*}{5}}
+& \multirow{2}{*}{\textbf{\large Wheeler, Ben}} & \multirow{2}{*}{\textbf{\large whee0113}} \\
+\multicolumn{1}{|c|}{}
+           & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+\end{tabular}
+\end{center}
+
+\vspace{1em}
+
+\vspace{1em}
+
+%\medskip
+
+%\setlength{\columnseprule}{2pt}
+%\def\columnseprulecolor{\color{black}}
+\begin{multicols}{2}
+
+\begin{tabular}{|c|c|c|c|}
+\multicolumn{4}{c}{\textbf{Grade}} \\\hline
+Exercise & Pages & Your Score & Max \\\hline
+\multirow{2}{*}{1} & \multirow{2}{*}{2-3} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{10} \\
+& & & \\\hline
+\multirow{2}{*}{2} & \multirow{2}{*}{4} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{5} \\
+& & & \\\hline
+\multirow{2}{*}{3} & \multirow{2}{*}{5} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{5} \\
+& & & \\\hline
+\multirow{2}{*}{4} & \multirow{2}{*}{6-7} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{10} \\
+& & & \\\hline
+\multirow{2}{*}{5} & \multirow{2}{*}{8-9} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{10} \\
+& & & \\\hline
+\multirow{2}{*}{\textbf{Total}} & \multirow{2}{*}{2-\pageref*{LastPage}} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{40} \\
+& & & \\\hline
+\end{tabular}
+
+
+\noindent\textbf{Additional Help and Resources.}
+Did you use help and/or resources other than the textbook? Please indicate below.
+
+
+\vspace{\fill}
+\noindent\phantom{Dimitris}
+
+\end{multicols}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%=================================================
+% Problem 1 - JFLAP
+%=================================================
+
+\newpage
+\section{JFLAP [10 points]}\label{jflap}
+Let the alphabet be $\Sigma = \set{0, 1}$ in every case below.
+Use JFLAP (\href{\jflapurl}{\jflapurl}) to implement and test state machines.
+Include in each of your answers a \textbf{screenshot} that shows how each automaton looks like inside JFLAP, 
+as well as \textbf{examples} of their execution \textbf{on some input strings}.
+\begin{enumerate}[label=(\roman*)]
+
+%question 1.a
+\item \textbf{[5 pts]} Give a \textbf{DFA} recognizing the language $L_{1,a} = \set{w \mid \mbox{$w$ is any string except 11 and 111}}$.
+\end{enumerate}
+
+\vspace{1em}
+
+%answer 1.a
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{figs/images/1-i_testing.png}
+\caption{DFA for $L_{1,a}$ implemented in JFLAP along with examples of its execution on some input strings}
+\end{figure}
+
+\vspace{2em}
+
+%question 1.b
+\begin{enumerate}[label=(\roman*)]\setcounter{enumi}{1}
+\item \textbf{[5 pts]} Give an \textbf{NFA} recognizing the language $L_{1,b} = \left(01 \regexpunion 001 \regexpunion 010\right)^*$.
+\end{enumerate}
+
+\vspace{1em}
+
+%answer 1.b
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{figs/images/1-ii_testing.png}
+\caption{NFA for $L_{1,b}$ implemented in JFLAP along with examples of its execution on some input strings}
+\end{figure}
+
+%=================================================
+% Problem 2 - Beating a Finite Automaton in the Big Match
+%=================================================
+
+\newpage
+\section{Beating a Finite Automaton in the Big Match [5 points]}\label{game}
+This exercise is based on the paper \emph{Beating A Finite Automaton in the Big Match}, by Lance Fortnow and Peter Kimmel.
+The paper is available at:
+\begin{center}
+\href{http://www.tark.org/proceedings/tark_jul22_98/p225-fortnow.pdf}{http://www.tark.org/proceedings/tark\_jul22\_98/p225-fortnow.pdf}.
+\end{center}
+
+
+Please read the introduction and the preliminaries of this paper up to page 4 where the definition of ``The Big Match'' is given.  Then jump to Section 3 and read Theorems 3.1 and 3.2 (with their proofs). 
+\begin{enumerate}[label=(\roman*)]
+   \item \textbf{[3pts]} In the course we are using an idea similar to the one that is used in the proof of Theorem 3.1.  What is that idea or theorem that we prove in class?
+   \item \textbf{[2pts]} Why does this idea fail to provide a positive result in Theorem 3.2?
+\end{enumerate}
+
+\noindent\textbf{Solution:}
+
+\begin{enumerate}[label=(\roman*)]
+   \item \textbf{Idea from Theorem 3.1 similar to our course:}
+   
+   The key idea in Theorem 3.1 is \textbf{state repetition} (or cycle detection) in finite automata.
+   
+   \textbf{Proof strategy of Theorem 3.1:}
+   \begin{itemize}
+   \item P1 observes P2 (a DFA with $k$ states) for $3k$ rounds
+   \item By the pigeonhole principle, P2 must enter a cycle
+   \item Once in the cycle, P2's behavior becomes predictable and periodic
+   \item P1 exploits this: plays $t$ when P2 is about to output $T$, or plays $h$ forever if the cycle only contains $H$
+   \end{itemize}
+   
+   \textbf{Connection to our course:}
+   
+   This is directly related to the \textbf{Pumping Lemma for Regular Languages}, which relies on the same fundamental property:
+   
+   \begin{quote}
+   \textit{If a DFA has $k$ states and processes an input of length greater than $k$, then by the pigeonhole principle, it must visit some state twice. This creates a cycle that can be repeated (``pumped'').}
+   \end{quote}
+   
+   Both Theorem 3.1 and the Pumping Lemma exploit the fact that:
+   \begin{itemize}
+   \item DFAs have \textbf{finite memory} (only $k$ states)
+   \item After processing $k+1$ inputs, a state must repeat
+   \item This repetition creates predictable, periodic behavior
+   \end{itemize}
+   
+   The Pumping Lemma uses this to show certain languages are non-regular, while Theorem 3.1 uses it to show that a player can exploit a finite automaton's predictable behavior.
+   
+   \newpage
+   
+   \item \textbf{Why this idea fails in Theorem 3.2:}
+   
+   In Theorem 3.2, P1 does \textbf{not know the number of states $k$} of P2's DFA.
+   
+   \textbf{The problem:}
+   
+   The cycle detection method from Theorem 3.1 requires knowing $k$ to determine how long to observe (e.g., $3k$ rounds) to guarantee finding a cycle. Without knowing $k$, P1 faces a dilemma:
+   
+   \begin{itemize}
+   \item \textbf{If P1 plays $t$ too early:} P2 might be designed to output $H$ at that specific round, giving P1 payoff 0
+   \item \textbf{If P1 waits too long (or never plays $t$):} P2 could be designed to eventually output only $T$, but P1 never capitalizes on it, getting average payoff 0
+   \end{itemize}
+   
+   \textbf{The adversarial construction:}
+   
+   Since P1 is deterministic and doesn't know $k$, an adversary can construct a DFA with $k$ large enough that:
+   \begin{itemize}
+   \item The DFA outputs $H$ for longer than P1's observation period
+   \item When P1 finally plays $t$ (at some predetermined round $n$), the DFA outputs $H$ at round $n$
+   \item Or, if P1 never plays $t$, the DFA eventually outputs only $T$, but P1 misses all opportunities
+   \end{itemize}
+   
+   \textbf{Conclusion:} Without knowing $k$, P1 cannot determine the observation length needed to guarantee seeing a complete cycle, so the DFA can always "hide" its periodic behavior beyond P1's detection threshold.
+\end{enumerate} 
+
+%=================================================
+% Problem 3 - Regular Grammars
+%=================================================
+
+\newpage
+\section{Regular Grammars [5 points]}
+Let $\Sigma = \set{0, 1}$.
+Find a regular grammar that generates the languange $L$ shown below:
+\begin{displaymath}
+L = \set{w \mid \mbox{$w\in\Sigma^*$ such that $w$ has at most two 0's}}\,.
+\end{displaymath}
+
+\noindent\textbf{Solution:}
+
+We construct a right-linear grammar by creating states that count the number of 0's seen so far:
+\begin{itemize}
+\item State $S$: 0 zeros seen (start symbol)
+\item State $A$: 1 zero seen
+\item State $B$: 2 zeros seen
+\end{itemize}
+
+From each state, we can:
+\begin{itemize}
+\item Read a 1 and stay in the current state
+\item Read a 0 and move to the next state (unless we're already at 2 zeros)
+\item Terminate (accept), since all states represent valid strings
+\end{itemize}
+
+The regular grammar is:
+\begin{displaymath}
+\begin{array}{rcl}
+S & \to & 1S \mid 0A \mid \emptystring \\
+A & \to & 1A \mid 0B \mid \emptystring \\
+B & \to & 1B \mid \emptystring
+\end{array}
+\end{displaymath}
+
+This grammar generates all strings over $\{0,1\}$ with at most two 0's. For example:
+\begin{itemize}
+\item String ``01011'': $S \Rightarrow 0A \Rightarrow 01A \Rightarrow 010B \Rightarrow 0101B \Rightarrow 01011B \Rightarrow 01011$ (2 zeros)
+\item String ``000'' cannot be generated: $S \Rightarrow 0A \Rightarrow 00B$, but $B$ has no rule for producing another 0.
+\end{itemize}
+
+
+%=================================================
+% Problem 4 - Context-Free Grammars
+%=================================================
+
+
+\newpage
+\section{Context-Free Grammars [10 points]}\label{cfg}
+Consider the context-free grammar $G_2$ shown below.
+\begin{displaymath}
+\begin{array}{ccl}
+S & \longrightarrow & 0 X \\
+X & \longrightarrow & 0 X \\
+X & \longrightarrow & 1 X \\
+X & \longrightarrow & 1 
+\end{array}
+\end{displaymath}
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{[3 pts]} What language does $G_2$ recognize?
+\item \textbf{[2 pts]} Is $L(G_2)$ regular? Why or why not?
+\item \textbf{[3 pts]} Give a CFG in Chomsky Normal Form generating $L(G_2)$.
+\item \textbf{[3 pts]} Is your CFG that you gave in the question above ambiguous? Why or why not?
+\end{enumerate}
+
+\noindent\textbf{Solution:}
+
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Language recognized by $G_2$:}
+
+Starting with $S \Rightarrow 0X$, we observe that $X$ generates any string of 0's and 1's that \emph{ends with 1}, since:
+\begin{itemize}
+\item The only way to terminate is via $X \to 1$
+\item Before terminating, we can use $X \to 0X$ or $X \to 1X$ any number of times
+\end{itemize}
+
+Therefore, $X$ generates $\{0,1\}^*1$, and:
+\[
+L(G_2) = \{ 0w \mid w \in \{0,1\}^*, \text{ and } w \text{ ends with } 1 \}
+\]
+
+Equivalently: $L(G_2) = \{ 0u1 \mid u \in \{0,1\}^* \}$ (all binary strings starting with 0 and ending with 1).
+
+\item \textbf{Is $L(G_2)$ regular?}
+
+\textbf{Yes}, $L(G_2)$ is regular.
+
+\textbf{Proof using Regular Grammar Definition:}
+
+Recall that a \textbf{regular grammar} is one that is either right-linear or left-linear:
+\begin{itemize}
+\item \textbf{Right-linear:} All productions have the form $A \to xB$ or $A \to x$, where $A, B \in V$ (nonterminals) and $x \in T^*$ (string of terminals)
+\item \textbf{Left-linear:} All productions have the form $A \to Bx$ or $A \to x$
+\end{itemize}
+
+Let's examine the productions of $G_2$:
+\begin{displaymath}
+\begin{array}{rcll}
+S & \to & 0X & \text{(form: } A \to xB \text{, where } x=0, B=X \text{)} \\
+X & \to & 0X & \text{(form: } A \to xB \text{, where } x=0, B=X \text{)} \\
+X & \to & 1X & \text{(form: } A \to xB \text{, where } x=1, B=X \text{)} \\
+X & \to & 1 & \text{(form: } A \to x \text{, where } x=1 \text{)}
+\end{array}
+\end{displaymath}
+
+Every production is of the form $A \to xB$ or $A \to x$, so $G_2$ is a \textbf{right-linear grammar}.
+
+Since $G_2$ is a regular grammar, it generates a regular language. Therefore, $L(G_2)$ is regular.
+
+
+\newpage
+
+\item \textbf{CFG in Chomsky Normal Form:}
+
+We convert the original grammar to CNF using the standard 5-step procedure:
+
+\textbf{Original Grammar:}
+\begin{displaymath}
+\begin{array}{rcl}
+S & \to & 0X \\
+X & \to & 0X \mid 1X \mid 1
+\end{array}
+\end{displaymath}
+
+\textbf{Step 1: Add a new start variable.}
+
+Not needed here, as $S$ doesn't appear on the right-hand side of any production.
+
+\textbf{Step 2: Eliminate all $\lambda$-rules (of the form $A \to \lambda$).}
+
+No $\lambda$-rules exist in this grammar, so no changes needed.
+
+\textbf{Step 3: Eliminate all unit rules (of the form $A \to B$).}
+
+No unit rules exist in this grammar, so no changes needed.
+
+\textbf{Step 4: Patch up the grammar.}
+
+The grammar still generates the same language $L(G_2) = \{0u1 \mid u \in \{0,1\}^*\}$, so no patching needed.
+
+\textbf{Step 5: Convert the remaining rules into proper CNF form.}
+
+CNF requires all productions to be either:
+\begin{itemize}
+\item $A \to BC$ (two nonterminals), or
+\item $A \to a$ (single terminal)
+\end{itemize}
+
+The problematic rules are $S \to 0X$, $X \to 0X$, and $X \to 1X$ (terminal mixed with nonterminal).
+
+We introduce new nonterminals for each terminal:
+\begin{itemize}
+\item $T_0 \to 0$
+\item $T_1 \to 1$
+\end{itemize}
+
+Replace terminals in mixed productions:
+\begin{itemize}
+\item $S \to 0X$ becomes $S \to T_0 X$
+\item $X \to 0X$ becomes $X \to T_0 X$
+\item $X \to 1X$ becomes $X \to T_1 X$
+\item $X \to 1$ stays as-is (already in CNF)
+\end{itemize}
+
+\textbf{Final CNF Grammar:}
+
+\vspace{.2em}
+
+\[
+\boxed{
+\begin{array}{rcl}
+S & \to & T_0 X \\
+X & \to & T_0 X \mid T_1 X \mid 1 \\
+T_0 & \to & 0 \\
+T_1 & \to & 1
+\end{array}
+}
+\]
+
+\vspace{1em}
+All rules are now in proper CNF form.
+
+\newpage
+
+\item \textbf{Is this CFG ambiguous?}
+
+\textbf{No}, the grammar is \textbf{not ambiguous}.
+
+\textbf{Proof using the Definition of Ambiguity:}
+
+Recall that a grammar $G$ is \textbf{ambiguous} if it generates some string $w$ ambiguously, meaning that string has two or more different leftmost derivations.
+
+Conversely, a grammar is \textbf{unambiguous} if every string in $L(G)$ has exactly one leftmost derivation.
+
+For our grammar $G_2$, consider any string $w \in L(G_2)$. We know $w$ has the form $w = 0u1$ where $u \in \{0,1\}^*$.
+
+The leftmost derivation of $w$ must proceed as follows:
+\begin{enumerate}
+\item \textbf{Start:} $S \Rightarrow 0X$ (this is the only production from $S$, so no choice here)
+\item \textbf{Middle:} For each symbol $s_i$ in $u = s_1s_2\ldots s_k$:
+\begin{itemize}
+\item If $s_i = 0$: we must apply $X \Rightarrow 0X$ (uniquely determined by the symbol we need)
+\item If $s_i = 1$: we must apply $X \Rightarrow 1X$ (uniquely determined by the symbol we need)
+\end{itemize}
+\item \textbf{End:} $X \Rightarrow 1$ (this is the only way to terminate and produce the final 1)
+\end{enumerate}
+
+Since each derivation step is uniquely determined by the target string, every string in $L(G_2)$ has \textbf{exactly one leftmost derivation}.
+
+Therefore, by definition, the grammar $G_2$ is \textbf{unambiguous}.
+\end{enumerate}
+
+%=================================================
+% Problem 5 - Pushdown Automata
+%=================================================
+
+\newpage
+\section{Pushdown Automata [10 points]}\label{pda}
+Let $P_3$ be the PDA that is shown below.
+\begin{center}
+{
+\includegraphics[width=0.7\textwidth]{figs/Prolem5_figure.png}
+}
+\end{center}
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{[2 pts]} Give a formal description of $P_3$.
+\item \textbf{[3 pts]} What language does $P_3$ recognize?
+\item \textbf{[3 pts]} Give a context-free grammar that generates $L(P_3)$.
+\item \textbf{[2 pts]} Is $L(P_3)$ regular? Why or why not?
+\end{enumerate}
+
+\noindent\textbf{Solution:}
+
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Formal description of $P_3$:}
+
+\vspace{0.5em}
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{6-tuple Definition:}
+
+\vspace{0.3em}
+
+$P_3 = (Q, \Sigma, \Gamma, \delta, q_0, F)$ where:
+\begin{itemize}
+\item $Q = \{q_0, q_1, q_2\}$
+\item $\Sigma = \{0, 1\}$
+\item $\Gamma = \{0, 1, \$\}$
+\item $q_0 \in Q$ is the start state
+\item $F = \{q_0\} \subseteq Q$
+\end{itemize}
+
+\vspace{0.3em}
+
+\textbf{Transition function:}
+
+$\delta: Q \times \Sigma_{\emptystring} \times \Gamma_{\emptystring} \to \mathcal{P}(Q \times \Gamma_{\emptystring})$
+
+\vspace{0.2em}
+
+where $\Sigma_{\emptystring} = \Sigma \cup \{\emptystring\}$ and $\Gamma_{\emptystring} = \Gamma \cup \{\emptystring\}$.
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Transition Table:}
+
+\vspace{0.3em}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{State} & \textbf{Input} & \textbf{Pop} & \textbf{New State} & \textbf{Push} \\
+\hline
+$q_0$ & $0$ & $\emptystring$ & $q_1$ & $\$$ \\
+\hline
+$q_0$ & $1$ & $\emptystring$ & $q_2$ & $\$$ \\
+\hline
+$q_1$ & $0$ & $\emptystring$ & $q_1$ & $0$ \\
+\hline
+$q_1$ & $1$ & $0$ & $q_1$ & $\emptystring$ \\
+\hline
+$q_1$ & $1$ & $\$$ & $q_0$ & $\emptystring$ \\
+\hline
+$q_2$ & $0$ & $1$ & $q_2$ & $\emptystring$ \\
+\hline
+$q_2$ & $1$ & $\emptystring$ & $q_2$ & $1$ \\
+\hline
+$q_2$ & $0$ & $\$$ & $q_0$ & $\emptystring$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.2em}
+
+\small{Note: Each row represents $\delta(\text{State}, \text{Input}, \text{Pop}) = \{(\text{New State}, \text{Push})\}$}
+\end{minipage}
+
+\vspace{1em}
+
+\item \textbf{Language recognized by $P_3$:}
+
+The PDA accepts strings based on the first symbol read:
+
+\textbf{Case 1: Strings starting with 0}
+
+When the first symbol is 0, the PDA enters state $q_1$. In $q_1$:
+\begin{itemize}
+\item Reading a 0 pushes it onto the stack
+\item Reading a 1 pops a 0 from the stack
+\item Reading a 1 when $\$$ is on top pops $\$$ and returns to $q_0$ (accept)
+\end{itemize}
+
+The PDA accepts when the stack becomes empty (reaching $\$$) after reading a 1. This happens when the string has exactly one more 1 than 0.
+
+\newpage
+
+\textbf{Case 2: Strings starting with 1}
+
+When the first symbol is 1, the PDA enters state $q_2$. In $q_2$:
+\begin{itemize}
+\item Reading a 1 pushes it onto the stack
+\item Reading a 0 pops a 1 from the stack
+\item Reading a 0 when $\$$ is on top pops $\$$ and returns to $q_0$ (accept)
+\end{itemize}
+
+The PDA accepts when the stack becomes empty (reaching $\$$) after reading a 0. This happens when the string has exactly one more 0 than 1.
+
+\textbf{Language Definition:}
+
+$L(P_3) = \{ 0w \mid w \in \{0,1\}^* \text{ and } w \text{ has exactly one more 1 than 0}  \}$\newline
+$\cup \{ 1w \mid w \in \{0,1\}^* \text{ and } w \text{ has exactly one more 0 than 1} \}$
+
+Equivalently: strings that start with 0 and have one more 1 than 0, or start with 1 and have one more 0 than 1.
+
+\item \textbf{Context-free grammar for $L(P_3)$:}
+
+We construct a CFG by considering the two cases separately:
+
+\textbf{Grammar:}
+\begin{displaymath}
+\begin{array}{rcl}
+S & \to & 0E1 \mid 1E0 \\
+E & \to & 0E1E \mid 1E0E \mid \emptystring
+\end{array}
+\end{displaymath}
+
+\textbf{Explanation:}
+
+The nonterminal $E$ generates all strings with equal numbers of 0's and 1's (a balanced string):
+\begin{itemize}
+\item $E \to 0E1E$ adds a 0, recursively generates a balanced string, adds a 1, then recursively generates another balanced string
+\item $E \to 1E0E$ does the same but with 1 first, then 0
+\item $E \to \emptystring$ allows termination
+\end{itemize}
+
+The start symbol $S$ uses $E$ to create strings with the desired imbalance:
+\begin{itemize}
+\item $S \to 0E1$: Start with 0, insert a balanced string (equal 0's and 1's), end with 1. This gives one more 1 than 0 overall.
+\item $S \to 1E0$: Start with 1, insert a balanced string (equal 0's and 1's), end with 0. This gives one more 0 than 1 overall.
+\end{itemize}
+
+For example, $S \Rightarrow 0E1 \Rightarrow 01$ gives string ``01'' (one 0, two 1's), and $S \Rightarrow 0E1 \Rightarrow 0(0E1E)1 \Rightarrow 0011$ gives string ``0011'' (two 0's, three 1's).
+
+\item \textbf{Is $L(P_3)$ regular?}
+
+\textbf{No}, $L(P_3)$ is \textbf{not regular}.
+
+The language requires counting the number of 0's and 1's to ensure they differ by exactly one. This counting property cannot be achieved with a finite automaton, which has only finite memory. 
+
+More formally, we can prove this using the pumping lemma for regular languages: consider strings of the form $0^n1^{n+1}$ for large $n$. Any attempt to pump a substring will destroy the precise balance between 0's and 1's required by the language.
+\end{enumerate}
+
+\end{document}

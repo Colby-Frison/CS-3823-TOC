@@ -1,0 +1,328 @@
+\documentclass[letterpaper,11pt,twoside]{article}
+\usepackage[margin=0.88in]{geometry}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\mypdfauthor{Dimitris Diochnos}
+\def\mypdfsubject{Undergraduate Course}
+\def\mypdftitle{CS 3823 - Theory of Computation, 2025F: HW4}
+\def\myheadertitle{CS 3823 - Theory of Computation: Homework Assignment 4}
+\def\mytitle{CS 3823 - Theory of Computation: Homework Assignment 4}
+\def\thecurrentsemester{Fall 2025}
+\def\myduedate{\textbf{Due:} Friday, November 14, 2025}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{lmodern}      % I need this in order to present the tilde
+\usepackage[T1]{fontenc}  % I need this in order to present the tilde in the middle of the line
+\usepackage{xspace}
+\usepackage{enumitem}
+\usepackage[numbers,square,sort&compress]{natbib}
+\usepackage[euler-digits, T1]{eulervm}
+\usepackage{upgreek}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[
+   colorlinks%
+   ,plainpages=false%This forces a unique identification of pages.
+   ,hypertexnames=true%This is necessary to have exact link on Index page.
+   ,naturalnames
+   ,hyperindex
+   ,citecolor=OliveGreen
+   ,urlcolor=RoyalBlue
+   ,pdfauthor={\mypdfauthor}
+   ,pdftitle={\mypdftitle}
+   ,pdfsubject={\mypdfsubject}
+   %,pdfkeywords={...}
+]{hyperref}
+\usepackage{psfrag}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{subcaption}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{pstricks}
+\usepackage{pst-func}
+\psset{unit=0.1cm}%
+\psset{linewidth=0.5}%
+\psset{fillstyle=solid}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+\setlength{\headheight}{14pt}
+\fancypagestyle{firststyle}
+{
+   \fancyhf{}
+   \fancyfoot[L]{\today}
+   \fancyfoot[R]{\thepage/\pageref*{LastPage}}
+}
+\newcommand{\stylishPagesColor}{Gray}
+\newcommand{\stylishHref}[2]%
+{\hypersetup{urlcolor=\stylishPagesColor}%
+\href{#1}{#2}%
+\hypersetup{urlcolor=RoyalBlue}}
+\fancyhead{} % clear all header fields
+\fancyhead[CO,CE]{\textsc{\myheadertitle}}
+\fancyfoot{} % clear all footer fields
+%\fancyfoot[LO,RE]{\today}
+\fancyfoot[LO,RE]{November 2, 2025}
+%\fancyfoot[CO,CE]{\thepage/\pageref*{LastPage}}
+\fancyfoot[RO,LE]{\thepage/\pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.0pt}
+\renewcommand{\footrulewidth}{0.0pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% So that absolute values and norms are neat.
+\usepackage{amsmath}
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+% Sets
+\providecommand{\set}[1]{\ensuremath{\left\{#1\right\}}\xspace}
+\providecommand{\powerset}[1]{\ensuremath{\mathcal{P}\left( #1\right)}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\emptysymbol}{\ensuremath{\varepsilon}}
+\newcommand{\emptystring}{\ensuremath{\varepsilon}}
+\newcommand{\regexpunion}{\ensuremath{\cup}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\jflapurl{http://www.jflap.org}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{color}
+\definecolor{RoyalBlue}{cmyk}{1, 0.50, 0, 0}
+\definecolor{ForestGreen}{cmyk}{0.864, 0.0, 0.429, 0.396}
+\definecolor{Brown}{cmyk}{0.0,0.692,0.925,0.529}
+
+\newcommand{\WriteRed}[1]{{\color{red} #1 }\xspace}
+\newcommand{\WriteRoyalBlue}[1]{{\color{RoyalBlue} #1 }\xspace}
+\newcommand{\WriteForestGreen}[1]{{\color{ForestGreen} #1 }\xspace}
+\newcommand{\WriteBrown}[1]{{\color{Brown} #1 }\xspace}
+\newcommand{\WriteCustomColor}[1]{{\color{blue} #1 }\xspace}
+\newcommand{\WriteSolutions}[1]{\WriteCustomColor{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\author{
+\textsc{\thecurrentsemester} \hspace{3cm}\myduedate
+}
+\title{\mytitle}
+\date{}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\thispagestyle{firststyle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\vspace{-0.5cm}
+\noindent\makebox[\linewidth]{\rule{\columnwidth}{2pt}}
+
+%\section*{General Information}
+\noindent\textbf{Related Reading.} 
+Sections 2.2, 2.3. Chapter 3.\\
+%Sections 8.1, 9.1, 9.2, 9.3\\
+\noindent\textbf{Instructions.} Near the top of the first page of your solutions please list clearly \textbf{all} the members of the group (\underline{please see the syllabus for the collaboration policy}) who have created the solutions that you are submitting. Listing the names of the people in the group implies their full name and their 4x4 IDs.
+Alternatively, you can use the space below and provide the relevant information 
+in case you submit the solutions using this document.\\ 
+\noindent\makebox[\linewidth]{\rule{\columnwidth}{2pt}}
+
+
+
+
+\begin{center}
+\textbf{Student Information for the Solutions Submitted}
+\end{center}
+
+\begin{center}
+\begin{tabular}{c|c|c|}\cline{2-3}
+ & Lastname, Firstname
+ & 4x4 ID (e.g., dioc0000)
+ \\\hline
+%\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{1}}}
+\multicolumn{1}{|c|}{\multirow{2}{*}{1}}
+& \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\
+\multicolumn{1}{|c|}{}
+           & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+%\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{2}}}
+\multicolumn{1}{|c|}{\multirow{2}{*}{2}}
+& \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\
+\multicolumn{1}{|c|}{}
+           & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+%\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{3}}}
+\multicolumn{1}{|c|}{\multirow{2}{*}{3}}
+& \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\
+\multicolumn{1}{|c|}{}
+           & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+%\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{4}}}
+\multicolumn{1}{|c|}{\multirow{2}{*}{4}}
+& \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\
+\multicolumn{1}{|c|}{}
+           & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+%\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{5}}}
+\multicolumn{1}{|c|}{\multirow{2}{*}{5}}
+& \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\
+\multicolumn{1}{|c|}{}
+           & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+\multicolumn{1}{|c|}{\multirow{2}{*}{6}}
+& \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\
+\multicolumn{1}{|c|}{}
+           & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+\end{tabular}
+\end{center}
+
+\thispagestyle{empty}
+
+%\medskip
+
+%\setlength{\columnseprule}{2pt}
+%\def\columnseprulecolor{\color{black}}
+\begin{multicols}{2}
+
+\begin{tabular}{|c|c|c|c|}
+\multicolumn{4}{c}{\textbf{Grade}} \\\hline
+Exercise & Pages & Your Score & Max \\\hline
+\multirow{2}{*}{1} & \multirow{2}{*}{2} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{8} \\
+& & & \\\hline
+\multirow{2}{*}{2} & \multirow{2}{*}{3} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{8} \\
+& & & \\\hline
+\multirow{2}{*}{3} & \multirow{2}{*}{4} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{8} \\
+& & & \\\hline
+\multirow{2}{*}{4} & \multirow{2}{*}{5} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{8} \\
+& & & \\\hline
+\multirow{2}{*}{5} & \multirow{2}{*}{6-7} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{8} \\
+& & & \\\hline
+\multirow{2}{*}{\textbf{Total}} & \multirow{2}{*}{2-\pageref*{LastPage}} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{40} \\
+& & & \\\hline
+\end{tabular}
+
+
+\noindent\textbf{Additional Help and Resources.}
+Did you use help and/or resources other than the textbook? Please indicate below.
+
+
+\vspace{\fill}
+\noindent\phantom{Dimitris}
+
+\end{multicols}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\newpage
+\section{Context-Free Grammar to Pushdown Automaton [8 points]}
+Consider the context-free grammar \( G = (V, \Sigma, R, S) \) with
+\( V = \{S, T\}, \Sigma = \{a,b,c\}\), 
+and productions
+\begin{displaymath}
+\begin{array}{rcl}
+S & \rightarrow & aSc \ \mid\ T \\
+T & \rightarrow & bTc \ \mid\ \varepsilon
+\end{array}
+\end{displaymath}
+
+\begin{enumerate}[label=(\roman*)]
+   \item \textbf{[2 points]} Describe in words (and set notation) the language \(L(G)\).
+    \item \textbf{[6 points]} Construct a \textbf{pushdown automaton (PDA)} \(M\) that accepts \(L(G)\). 
+    Please use the construction that we have seen in class (also discussed in the book).
+    As usual, the PDA should start with an empty stack and accept strings in the language with an empty stack.
+\end{enumerate}
+
+
+
+
+
+
+\newpage
+\section{Pumping Lemma for Context-Free Languages [8 points]}\label{pump}
+Let $\Sigma = \set{0, 1, 2, 3}$. 
+Is the language $L_{1} = \{w\in\Sigma^* \mid \mbox{in $w$}$, 
+the number of $0$'s equals the number of $1$'s, and the number of $2$'s equals 
+the number of $3$'s$\}$ context-free? Show your answer is correct.
+
+
+
+
+
+
+
+\newpage
+\section{Assigned Reading [8 points]}
+Read the Introduction, Sections 1 and 2, and Section 9 up to the end of 9.I of Alan Turing's 1936 paper 
+``On Computable Numbers, with an Application to the Entscheidungsproblem'' that is available at: 
+\href{https://www.diochnos.com/about/TuringCompute.pdf}{https://www.diochnos.com/about/TuringCompute.pdf}.
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{[4 points]} Give an example of a computation that Turing would have probably believed a human would be unable to do without paper. Justify your answer.
+\item \textbf{[4 points]} Is Turing more concerned with creating a machine that can simulate human computation or with creating a machine that humans can simulate? Justify your answer.
+\end{enumerate}
+\emph{Please answer the two questions above briefly, referring to and/or quoting the text for support. A well thought-out paragraph should be sufficient for each question.}
+
+
+
+
+
+
+
+
+\newpage
+\section{Assigned Reading [8 points]}
+Read the article ``Who Can Name the Bigger Number?'' by Scott Aaronson, which you can find at:
+\href{https://www.diochnos.com/teaching/CS3823/2025F/Aaronson99.pdf}{https://www.diochnos.com/teaching/CS3823/2025F/Aaronson99.pdf}. 
+This article may include concepts we have not yet covered, but the introduction to them should be sufficiently self-contained.
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{[4 points]} Going back to 5,000 B.C., name some advances in mathematics over time that have effectively allowed people to express bigger numbers than before the advent of those advances. 
+You may do outside research to answer this question.\footnote{A few examples will suffice; do not go overboard and write a research paper.} 
+Include at least one advance from Aaronson’s article.
+
+\item \textbf{[4 points]} Would Aaronson say Turing machines are important even if they didn't have the immense real-world impact that they currently have? Why or why not?
+\end{enumerate}
+
+
+
+
+
+
+
+
+\newpage
+\section{Designing a Turing Machine [8 points]}\label{design_tm}
+Let $L_3$ be the language $\set{0^n1^n \mid n \ge 1}$ over $\Sigma = \set{0,1}$.
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{[6 points]} Draw the state diagram for $M_1$, a deterministic Turing Machine that recognizes $L_1$. 
+\emph{It will be assumed that all the transitions not depicted go to the reject state, which may or may not be drawn.}
+
+\item \textbf{[2 points]} Is $M_1$, as constructed in the previous part, a decider? (If it is hard to answer this question, you should perhaps change your answer to the previous question; that is, redesign the machine.)
+\end{enumerate}
+
+
+
+\newpage
+\begin{center}
+\textbf{(extra space in case you need it for exercise \ref{design_tm})}
+\end{center}
+
+
+
+
+
+\end{document}

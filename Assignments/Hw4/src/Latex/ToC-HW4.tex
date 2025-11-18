@@ -1,0 +1,479 @@
+\documentclass[letterpaper,11pt,twoside]{article}
+\usepackage[margin=0.88in]{geometry}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\mypdfauthor{Dimitris Diochnos}
+\def\mypdfsubject{Undergraduate Course}
+\def\mypdftitle{CS 3823 - Theory of Computation, 2025F: HW4}
+\def\myheadertitle{CS 3823 - Theory of Computation: Homework Assignment 4}
+\def\mytitle{CS 3823 - Theory of Computation: Homework Assignment 4}
+\def\thecurrentsemester{Fall 2025}
+\def\myduedate{\textbf{Due:} Friday, November 14, 2025}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{lmodern}      % I need this in order to present the tilde
+\usepackage[T1]{fontenc}  % I need this in order to present the tilde in the middle of the line
+\usepackage{xspace}
+\usepackage{enumitem}
+\usepackage[numbers,square,sort&compress]{natbib}
+\usepackage[euler-digits, T1]{eulervm}
+\usepackage{upgreek}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[
+   colorlinks%
+   ,plainpages=false%This forces a unique identification of pages.
+   ,hypertexnames=true%This is necessary to have exact link on Index page.
+   ,naturalnames
+   ,hyperindex
+   ,citecolor=OliveGreen
+   ,urlcolor=RoyalBlue
+   ,pdfauthor={\mypdfauthor}
+   ,pdftitle={\mypdftitle}
+   ,pdfsubject={\mypdfsubject}
+   %,pdfkeywords={...}
+]{hyperref}
+\usepackage{psfrag}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{amssymb}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{pstricks}
+\usepackage{pst-func}
+\psset{unit=0.1cm}%
+\psset{linewidth=0.5}%
+\psset{fillstyle=solid}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+\setlength{\headheight}{14pt}
+\fancypagestyle{firststyle}
+{
+   \fancyhf{}
+   \fancyfoot[L]{\today}
+   \fancyfoot[R]{\thepage/\pageref*{LastPage}}
+}
+\newcommand{\stylishPagesColor}{Gray}
+\newcommand{\stylishHref}[2]%
+{\hypersetup{urlcolor=\stylishPagesColor}%
+\href{#1}{#2}%
+\hypersetup{urlcolor=RoyalBlue}}
+\fancyhead{} % clear all header fields
+\fancyhead[CO,CE]{\textsc{\myheadertitle}}
+\fancyfoot{} % clear all footer fields
+%\fancyfoot[LO,RE]{\today}
+\fancyfoot[LO,RE]{November 2, 2025}
+%\fancyfoot[CO,CE]{\thepage/\pageref*{LastPage}}
+\fancyfoot[RO,LE]{\thepage/\pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.0pt}
+\renewcommand{\footrulewidth}{0.0pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% So that absolute values and norms are neat.
+\usepackage{amsmath}
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+% Sets
+\providecommand{\set}[1]{\ensuremath{\left\{#1\right\}}\xspace}
+\providecommand{\powerset}[1]{\ensuremath{\mathcal{P}\left( #1\right)}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\emptysymbol}{\ensuremath{\varepsilon}}
+\newcommand{\emptystring}{\ensuremath{\varepsilon}}
+\newcommand{\regexpunion}{\ensuremath{\cup}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\jflapurl{http://www.jflap.org}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{color}
+\definecolor{RoyalBlue}{cmyk}{1, 0.50, 0, 0}
+\definecolor{ForestGreen}{cmyk}{0.864, 0.0, 0.429, 0.396}
+\definecolor{Brown}{cmyk}{0.0,0.692,0.925,0.529}
+
+\newcommand{\WriteRed}[1]{{\color{red} #1 }\xspace}
+\newcommand{\WriteRoyalBlue}[1]{{\color{RoyalBlue} #1 }\xspace}
+\newcommand{\WriteForestGreen}[1]{{\color{ForestGreen} #1 }\xspace}
+\newcommand{\WriteBrown}[1]{{\color{Brown} #1 }\xspace}
+\newcommand{\WriteCustomColor}[1]{{\color{blue} #1 }\xspace}
+\newcommand{\WriteSolutions}[1]{\WriteCustomColor{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\author{
+\textsc{\thecurrentsemester} \hspace{3cm}\myduedate
+}
+\title{\mytitle}
+\date{}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\thispagestyle{firststyle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\vspace{-0.5cm}
+\noindent\makebox[\linewidth]{\rule{\columnwidth}{2pt}}
+
+%\section*{General Information}
+\noindent\textbf{Related Reading.} 
+Sections 2.2, 2.3. Chapter 3.\\
+%Sections 8.1, 9.1, 9.2, 9.3\\
+\noindent\textbf{Instructions.} Near the top of the first page of your solutions please list clearly \textbf{all} the members of the group (\underline{please see the syllabus for the collaboration policy}) who have created the solutions that you are submitting. Listing the names of the people in the group implies their full name and their 4x4 IDs.
+Alternatively, you can use the space below and provide the relevant information 
+in case you submit the solutions using this document.\\ 
+\noindent\makebox[\linewidth]{\rule{\columnwidth}{2pt}}
+
+
+
+
+\begin{center}
+   \begin{tabular}{c|c|c|}\cline{2-3}
+    & Lastname, Firstname
+    & 4x4 ID (e.g., dioc0000)
+    \\\hline
+   %\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{1}}}
+   \multicolumn{1}{|c|}{\multirow{2}{*}{1}}
+   & \multirow{2}{*}{\textbf{\large Frison, Colby}} & \multirow{2}{*}{\textbf{\large fris0010}} \\
+   \multicolumn{1}{|c|}{}
+              & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+   %\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{2}}}
+   \multicolumn{1}{|c|}{\multirow{2}{*}{2}}
+   & \multirow{2}{*}{\textbf{\large Ward, Levin}} & \multirow{2}{*}{\textbf{\large ward0209}} \\
+   \multicolumn{1}{|c|}{}
+              & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+   %\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{3}}}
+   \multicolumn{1}{|c|}{\multirow{2}{*}{3}}
+   & \multirow{2}{*}{\textbf{\large Wage, Edward}} & \multirow{2}{*}{\textbf{\large wage0008}} \\
+   \multicolumn{1}{|c|}{}
+              & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+   %\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{4}}}
+   \multicolumn{1}{|c|}{\multirow{2}{*}{4}}
+   & \multirow{2}{*}{\textbf{\large Mosisa, Joy}} & \multirow{2}{*}{\textbf{\large mosi0010}} \\
+   \multicolumn{1}{|c|}{}
+              & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+   %\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{5}}}
+   \multicolumn{1}{|c|}{\multirow{2}{*}{5}}
+   & \multirow{2}{*}{\textbf{\large Wheeler, Ben}} & \multirow{2}{*}{\textbf{\large whee0113}} \\
+   \multicolumn{1}{|c|}{}
+              & \phantom{ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789} & \phantom{dioc0000dioc0000} \\\hline
+   \end{tabular}
+   \end{center}
+
+\thispagestyle{empty}
+
+%\medskip
+
+%\setlength{\columnseprule}{2pt}
+%\def\columnseprulecolor{\color{black}}
+\begin{multicols}{2}
+
+\begin{tabular}{|c|c|c|c|}
+\multicolumn{4}{c}{\textbf{Grade}} \\\hline
+Exercise & Pages & Your Score & Max \\\hline
+\multirow{2}{*}{1} & \multirow{2}{*}{2} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{8} \\
+& & & \\\hline
+\multirow{2}{*}{2} & \multirow{2}{*}{3} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{8} \\
+& & & \\\hline
+\multirow{2}{*}{3} & \multirow{2}{*}{4} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{8} \\
+& & & \\\hline
+\multirow{2}{*}{4} & \multirow{2}{*}{5} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{8} \\
+& & & \\\hline
+\multirow{2}{*}{5} & \multirow{2}{*}{6-7} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{8} \\
+& & & \\\hline
+\multirow{2}{*}{\textbf{Total}} & \multirow{2}{*}{2-\pageref*{LastPage}} & \multirow{2}{*}{\phantom{100100}} & \multirow{2}{*}{40} \\
+& & & \\\hline
+\end{tabular}
+
+
+\noindent\textbf{Additional Help and Resources.}
+Did you use help and/or resources other than the textbook? Please indicate below.
+
+
+\vspace{\fill}
+\noindent\phantom{Dimitris}
+
+\end{multicols}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\newpage
+\section{Context-Free Grammar to Pushdown Automaton [8 points]}
+Consider the context-free grammar \( G = (V, \Sigma, R, S) \) with
+\( V = \{S, T\}, \Sigma = \{a,b,c\}\), 
+and productions
+\begin{displaymath}
+\begin{array}{rcl}
+S & \rightarrow & aSc \ \mid\ T \\
+T & \rightarrow & bTc \ \mid\ \varepsilon
+\end{array}
+\end{displaymath}
+
+\begin{enumerate}[label=(\roman*)]
+   \item \textbf{[2 points]} Describe in words (and set notation) the language \(L(G)\).
+    \item \textbf{[6 points]} Construct a \textbf{pushdown automaton (PDA)} \(M\) that accepts \(L(G)\). 
+    Please use the construction that we have seen in class (also discussed in the book).
+    As usual, the PDA should start with an empty stack and accept strings in the language with an empty stack.
+\end{enumerate}
+
+\subsection*{(i) Language Description}
+
+The grammar generates strings that have some number of leading $a$'s, followed by some number of $b$'s, and then as many trailing $c$'s as the combined count of $a$'s and $b$'s. In formal notation:
+
+\begin{displaymath}
+L(G) = \{ a^i b^j c^{i+j} \mid i, j \geq 0 \}
+\end{displaymath}
+
+We can understand how this works by looking at the grammar rules:
+\begin{itemize}
+\item The rule $S \rightarrow a S c$ adds one $a$ to the front and one $c$ to the back each time it's used.
+\item The rule $S \rightarrow T$ passes control to $T$ when we're done adding $a$'s and $c$'s.
+\item The nonterminal $T$ generates $b^j c^j$ by repeatedly using $T \rightarrow b T c$ and eventually $T \rightarrow \varepsilon$. This also allows for the empty string when both $i = 0$ and $j = 0$.
+\end{itemize}
+
+\subsection*{(ii) PDA Diagram}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figs/Q1-2.pdf}
+    \caption{PDA Diagram}
+\end{figure}
+
+
+
+
+
+
+
+\newpage
+\section{Pumping Lemma for Context-Free Languages [8 points]}\label{pump}
+Let $\Sigma = \set{0, 1, 2, 3}$. 
+Is the language $L_{1} = \{w\in\Sigma^* \mid \mbox{in $w$}$, 
+the number of $0$'s equals the number of $1$'s, and the number of $2$'s equals 
+the number of $3$'s$\}$ context-free? Show your answer is correct.
+
+\vspace{0.3cm}
+\subsection{Proof by Contradiction}
+The language
+\begin{displaymath}
+L_{1} = \{ w \in \{0,1,2,3\}^* \mid \#_0(w) = \#_1(w) \text{ and } \#_2(w) = \#_3(w) \}
+\end{displaymath}
+is \textbf{not} context-free. We prove this by contradiction using the pumping lemma for context-free languages.
+
+\vspace{0.3cm}
+\noindent\textbf{Assumption:} Assume, for contradiction, that $L_{1}$ is context-free. Then by the pumping lemma for context-free languages, there exists a pumping length $p > 0$ such that any string $w \in L_{1}$ with $|w| \geq p$ can be decomposed as $w = uvxyz$ where:
+\begin{enumerate}[label=(\roman*)]
+\item $|vxy| \leq p$
+\item $|vy| \geq 1$
+\item For all $i \geq 0$, the string $uv^{i}xy^{i}z \in L_{1}$
+\end{enumerate}
+
+\noindent Consider the string $w = 0^{p} 2^{p} 1^{p} 3^{p}$ which clearly lies in $L_{1}$ since it has exactly $p$ zeros, $p$ ones, $p$ twos, and $p$ threes, satisfying both conditions $\#_0(w) = \#_1(w)$ and $\#_2(w) = \#_3(w)$.
+
+\vspace{0.3cm}
+\noindent\textbf{Analysis:} By the pumping lemma, we can write $w = uvxyz$ with $|vxy| \leq p$ and $|vy| \geq 1$. 
+
+\vspace{0.1cm}
+\noindent Since $|vxy| \leq p$, the substring $vxy$ must be contained entirely within one of the four uniform blocks $0^p, 2^p, 1^p, 3^p$, or it must straddle exactly one adjacent boundary between these blocks.
+
+\vspace{0.2cm}
+We now show that in every possible case, pumping leads to a contradiction:
+
+\vspace{0.2cm}
+\noindent\textit{Case 1:} \\
+\indent If $vxy$ is contained within a single block, then $v$ and $y$ contain only one type of symbol (all $0$s, all $2$s, all $1$s, or all $3$s). Pumping up (setting $i = 2$) or pumping down (setting $i = 0$) changes that symbol's count while leaving at least one of its required partner counts untouched. For example, if $vxy$ is contained in the $0^p$ block, then pumping increases or decreases the number of $0$s without changing the number of $1$s, breaking the requirement $\#_0 = \#_1$. Similar contradictions occur for the other blocks.
+
+\vspace{0.2cm}
+\noindent\textit{Case 2:} \\
+\indent If $vxy$ straddles the boundary between two blocks (say the $0/2$ boundary), then pumping alters both symbols in the boundary but still leaves the symbols farther to the right unchanged. For instance, pumping across the $0/2$ boundary changes the number of $0$s without changing the number of $1$s, breaking the requirement $\#_0 = \#_1$. Similar contradictions occur for the $2/1$ and $1/3$ boundaries.
+
+\vspace{0.2cm}
+\noindent\textbf{Contradiction:} \\
+\indent In all cases, no decomposition $uvxyz$ can satisfy the pumping lemma conditions while maintaining membership in $L_{1}$. This contradicts our assumption that $L_{1}$ is context-free. Therefore, $L_{1}$ is \textbf{not} a context-free language.
+
+
+
+
+
+
+
+\newpage
+\section{Assigned Reading [8 points]}
+Read the Introduction, Sections 1 and 2, and Section 9 up to the end of 9.I of Alan Turing's 1936 paper 
+``On Computable Numbers, with an Application to the Entscheidungsproblem'' that is available at: 
+\href{https://www.diochnos.com/about/TuringCompute.pdf}{https://www.diochnos.com/about/TuringCompute.pdf}.
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{[4 points]} Give an example of a computation that Turing would have probably believed a human would be unable to do without paper. Justify your answer.
+\item \textbf{[4 points]} Is Turing more concerned with creating a machine that can simulate human computation or with creating a machine that humans can simulate? Justify your answer.
+\end{enumerate}
+\emph{Please answer the two questions above briefly, referring to and/or quoting the text for support. A well thought-out paragraph should be sufficient for each question.}
+
+\subsection*{(i) Example of Computation}
+
+An example of a computation that Turing would have likely believed a human would be unable to do without paper is comparing two incredibly long numbers to confirm they are equal. In his paper, he uses the numbers 9999999999999999 and 999999999999999 to argue that the human mind has a finite number of states of mind, and this limited memory makes it difficult for a human to compute the quality of these numbers without paper. A human would be unable to tell at a glance if they are equal.
+
+\subsection*{(ii) Turing's Concern}
+
+Turing is absolutely more concerned with creating a machine that can simulate human computation. Turing explicitly states ``We may compare a man in the process of computing a real number to a machine'', which tells us that the starting point for his rationale is a human, and the machines he is creating are a model of human computation. Furthermore, when we look at the machines tapes, Turing refers to them as the analogue of a human's state of mind. These ideas support the arguments that the simple operations of his machine include all those which are used in the computation of a number by a human. He is not interested in whether a human can trace the machine's steps, but whether the machine can successfully model the human's fundamental computational behavior.
+
+
+
+
+
+
+
+\newpage
+\section{Assigned Reading [8 points]}
+Read the article ``Who Can Name the Bigger Number?'' by Scott Aaronson, which you can find at:
+\href{https://www.diochnos.com/teaching/CS3823/2025F/Aaronson99.pdf}{https://www.diochnos.com/teaching/CS3823/2025F/Aaronson99.pdf}. 
+This article may include concepts we have not yet covered, but the introduction to them should be sufficiently self-contained.
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{[4 points]} Going back to 5,000 B.C., name some advances in mathematics over time that have effectively allowed people to express bigger numbers than before the advent of those advances. 
+You may do outside research to answer this question.\footnote{A few examples will suffice; do not go overboard and write a research paper.} 
+Include at least one advance from Aaronson's article.
+
+\item \textbf{[4 points]} Would Aaronson say Turing machines are important even if they didn't have the immense real-world impact that they currently have? Why or why not?
+\end{enumerate}
+
+\subsection*{(i) Mathematical Advances for Expressing Larger Numbers}
+
+Several key advances in mathematics have allowed people to express bigger numbers over time:
+
+\textbf{Exponents:} Exponential notation was a major breakthrough because it allowed numbers to grow multiplicatively rather than just additively. For example, $10^3$ is much larger than $10 + 10 + 10$. This concept became the foundation for expressing extremely large numbers in a concise way.
+
+\textbf{Ackermann Sequence:} Aaronson discusses the Ackermann function, which is a systematic way to generate ever-larger numbers through a hierarchy of operations. It starts with addition, then multiplication, then exponentiation, then tetration, and continues beyond. This function grows faster than any primitive recursive function and shows how iterating operations on themselves can produce numbers far beyond what simple exponentiation can achieve.
+
+\textbf{Busy Beaver Numbers:} Aaronson highlights the Busy Beaver function as one of the fastest-growing functions we can define. This function comes from computability theory and Turing machines, and it grows faster than any computable function, including the Ackermann function. The Busy Beaver function shows how the theory of computation lets us define numbers so large they exceed anything we could express with earlier mathematical methods.
+
+\subsection*{(ii) Importance of Turing Machines Beyond Real-World Impact}
+
+Yes, Aaronson would argue that Turing machines are fundamentally important even without their real-world impact. He uses the hypothetical of explaining Turing machines to Archimedes at a time when computers were non-existent to illustrate this point. Aaronson writes that "big numbers have a way of imbuing abstract notions with reality," and he claims that the definition of science is "reason's attempt to compensate for our inability to perceive big numbers." 
+
+Turing machines allow us to rationalize and define larger numbers than ever before through their conceptual power. They provide the foundation for defining non-computable functions like the Busy Beaver, which grows faster than any computable function. This ability to formalize computability and explore the boundaries of what can be expressed mathematically makes Turing machines important to all of science, not just computer science. Even if they had never been physically built or used in practice, their theoretical importance in defining the limits of computation would make them a crucial tool for understanding what is and isn't possible in mathematics.
+
+
+
+
+
+
+
+
+\newpage
+\section{Designing a Turing Machine [8 points]}\label{design_tm}
+Let $L_3$ be the language $\set{0^n1^n \mid n \ge 1}$ over $\Sigma = \set{0,1}$.
+
+\begin{enumerate}[label=(\roman*)]
+   \item \textbf{[6 points]} Draw the state diagram for $M_1$, a deterministic Turing Machine that recognizes $L_3$. 
+   \emph{It will be assumed that all the transitions not depicted go to the reject state, which may or may not be drawn.}
+   
+   \item \textbf{[2 points]} Is $M_1$, as constructed in the previous part, a decider? (If it is hard to answer this question, you should perhaps change your answer to the previous question; that is, redesign the machine.)
+\end{enumerate}
+
+\subsection*{(i) Turing Machine Diagram}
+
+\noindent\textbf{Note:} The square symbol $\square$ used in JFLAP represents the blank symbol $\sqcup$ in our formal notation.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/TuringMachine.png}
+    \caption{State diagram for $M_1$}
+\end{figure}
+
+\newpage
+\subsection*{(ii) Decider Proof}
+
+\textbf{Yes, $M_1$ is a decider.}
+
+\vspace{0.2cm}
+\noindent\textbf{Proof that $M_1$ Always Halts:}
+
+A Turing machine is a decider if it:
+\begin{enumerate}
+\item Accepts all strings in the language
+\item Rejects all strings not in the language  
+\item Always halts (never loops infinitely) on every input
+\end{enumerate}
+
+\noindent\textbf{Termination Analysis:}
+
+For any input string $w$:
+\begin{itemize}
+\item Each complete iteration ($q_0 \to q_1 \to q_2 \to q_0$) marks exactly one $0$ and one $1$
+\item Maximum possible iterations = $\min(\text{count}(0), \text{count}(1)) \leq |w|/2$
+\item Each iteration performs bounded work:
+  \begin{itemize}
+  \item $q_0$: Scans through at most $|w|$ symbols
+  \item $q_1$: Scans through at most $|w|$ symbols  
+  \item $q_2$: Scans through at most $|w|$ symbols
+  \end{itemize}
+\item Total operations $\leq |w|^3$ (polynomial bound)
+\end{itemize}
+
+\noindent\textbf{Case Analysis:}
+
+\begin{enumerate}
+\item \textbf{$w \in L_3 = \{0^n1^n \mid n \geq 1\}$:}
+   \begin{itemize}
+   \item Exactly $n$ iterations, each marking one $(0,1)$ pair
+   \item Ends in $q_3$, verifies only $Y$'s remain, accepts
+   \item \textbf{Halts in accept state}
+   \end{itemize}
+
+\item \textbf{$w \notin L_3$:}
+   \begin{itemize}
+   \item \textbf{Wrong count ($0^n1^m$, $n \neq m$):} Either runs out of $1$'s in $q_1$ ($n>m$) or finds unmarked $1$'s in $q_3$ ($n<m$)
+   \item \textbf{Wrong order:} Rejects immediately in $q_0$ ($1$ before $0$) or $q_2$ ($1$ in $0$'s region)
+   \item \textbf{Mixed pattern:} Rejects in $q_3$ when finding $0/1$ during verification
+   \item \textbf{Empty string:} Rejects immediately in $q_0$
+   \item \textbf{Always halts in reject state}
+   \end{itemize}
+\end{enumerate}
+
+\noindent\textbf{No Infinite Loops Possible:}
+\begin{itemize}
+\item The number of unmarked symbols strictly decreases each iteration
+\item Machine progresses monotonically through the input
+\item All transitions are well-defined for all symbols
+\item No cycles exist except the productive marking cycle
+\end{itemize}
+
+\newpage
+\noindent\textbf{Conclusion:}
+
+Since $M_1$:
+\begin{itemize}
+\item \textbf{Accepts} all strings in $L_3$
+\item \textbf{Rejects} all strings not in $L_3$  
+\item \textbf{Halts on every input} in finite time
+\end{itemize}
+
+\textbf{$M_1$ is a decider} and therefore \textbf{$L_3$ is Turing-decidable}.
+
+\end{document}

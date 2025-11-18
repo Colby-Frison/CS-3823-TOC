@@ -1,0 +1,22 @@
+# ignore articles and textbook (files too big)
+\articles
+\textbook
+
+# We all have access to these if in class, i'll upload later
+\slides
+
+# ignore tex compilation files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.eps
+*.fig
+*.jff
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.synctex.gz(busy)
