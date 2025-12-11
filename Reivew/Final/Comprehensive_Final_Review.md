@@ -810,6 +810,8 @@ then problem $B$ must also be undecidable (otherwise we get a contradiction).
 4. Consider $D$ on input $\langle D \rangle$: Contradiction!
 5. Therefore, $H$ cannot exist
 
+**Big Picture:** This establishes $A_{TM}$ as our foundation. From here, we can prove other problems undecidable by showing that solving them would let us solve $A_{TM}$.
+
 ### 6.3 Mapping Reductions: Formal Definition
 
 **Definition:** $A \leq_m B$ if there exists computable function $f$ such that:
@@ -818,7 +820,10 @@ then problem $B$ must also be undecidable (otherwise we get a contradiction).
 **Properties of Mapping Reductions:**
 - If $A \leq_m B$ and $B$ is decidable, then $A$ is decidable
 - If $A \leq_m B$ and $A$ is undecidable, then $B$ is undecidable
-- If $A \leq_m B$ and $B$ is recognizable, then $A$ is recognizable
+- **Theorem:** If $A \leq_m B$ and $B$ is Turing-recognizable, then $A$ is Turing-recognizable
+  - **Proof idea:** If $N$ recognizes $B$, construct recognizer $M$ for $A$: On input $w$, compute $f(w)$, run $N$ on $f(w)$, accept if $N$ accepts
+- **Corollary:** If $A \leq_m B$ and $A$ is not Turing-recognizable, then $B$ is not Turing-recognizable
+  - **Application:** Since $\overline{A_{TM}}$ is not recognizable, we can show a problem $P$ is not recognizable by designing a mapping reduction $f: A_{TM} \leq_m \overline{P}$
 
 **How Reductions Work:**
 1. Given an instance $w$ of problem $A$
@@ -842,11 +847,27 @@ then problem $B$ must also be undecidable (otherwise we get a contradiction).
 
 **Proof Strategy:** Use reduction from $A_{TM}$ (which we know is undecidable from diagonalization).
 
-**The Reduction Function:**
-Given $\langle M, w \rangle$, construct $\langle M', w \rangle$ where $M'$ is a TM that:
-- Simulates $M$ on $w$
-- If $M$ accepts, $M'$ accepts
-- If $M$ rejects, $M'$ enters infinite loop
+**The Reduction Function (from slides):**
+The reduction function $F$ is defined as:
+
+```
+F = "On input ⟨M, w⟩, where M is a TM and w is a string:
+   (1) Construct the following two machines, $M_1$ and $M_2$:
+       $M_1$ = "On input x, reject":
+       $M_2$ = "On any input: Run M on w. If M accepts, accept."
+   (2) Output ⟨M_1, M_2⟩."
+```
+
+**How this works:**
+- $F$ takes $\langle M, w \rangle$ (instance of $A_{TM}$)
+- Constructs $M$ that: runs $M$ on its input $x$; accepts if $M$ accepts; loops if $M$ rejects
+- Outputs $\langle M_1, w \rangle$ (instance of $HALT_{TM}$)
+- **Key:** $M'$ halts on $w$ if and only if $M$ accepts $w$
+  - If $M$ accepts $w$: $M_1$ runs $M$ on $w$, $M$ accepts, so $M_1$ accepts (halts) ✓
+  - If $M$ rejects $w$: $M_1$ runs $M$ on $w$, $M$ rejects, so $M_1$ loops (doesn't halt) ✓
+  - If $M$ loops on $w$: $M_1$ loops (doesn't halt) ✓
+
+**Note on malformed inputs:** When describing a TM that computes a reduction from $A$ to $B$, improperly formed inputs are assumed to map to strings outside of $B$.
 
 **Claim:** $\langle M, w \rangle \in A_{TM}$ if and only if $\langle M', w \rangle \in HALT_{TM}$
 
@@ -903,79 +924,109 @@ Given $\langle M, w \rangle$, construct $\langle M', w \rangle$ where $M'$ is a 
 
 **Essence:** If halting were decidable, acceptance would be decidable. But acceptance isn't decidable, so halting can't be decidable either.
 
-### 6.4 More Reductions: Building the Hierarchy
+### 6.5 More Reductions: Building the Hierarchy
 
 **Big Picture:**
 This proof technique allows us to build a **hierarchy of undecidability**: once we prove a problem undecidable ($A_{TM}$ via diagonalization), we can prove many others undecidable by reduction—no need to redo the diagonalization argument every time.
 
-**$A_{TM} \leq_m E_{TM}$: The Emptiness Problem**
+**$A_{TM} \leq_m \overline{E_{TM}}$: The Emptiness Problem**
 
 **Definition:** $E_{TM} = \{\langle M \rangle \mid M$ is a TM and $L(M) = \emptyset\}$
 
 **Goal:** Prove $E_{TM}$ is undecidable.
 
-**Reduction Strategy:** If we could decide emptiness, we could decide acceptance.
+**Reduction Strategy:** Technically, we reduce $A_{TM}$ to $\overline{E_{TM}}$ (since $M$ accepts $w$ if and only if $L(M_1) \neq \emptyset$).
 
-**The Reduction:**
-Given $\langle M, w \rangle$, construct $M'$ that:
-- Ignores input $x$
-- Simulates $M$ on $w$
-- If $M$ accepts $w$, $M'$ accepts $x$
-- If $M$ rejects or loops on $w$, $M'$ rejects $x$
+**The Reduction (from slides):**
+Given $\langle M, w \rangle$, construct $M_1$ that:
+```
+M_1 = "On input x:
+  1. If x ≠ w, reject.
+  2. If x = w, run M on input w and accept if M accepts."
+```
 
-**Claim:** $\langle M, w \rangle \in A_{TM}$ if and only if $\langle M' \rangle \notin E_{TM}$
+**Analysis:**
+- $L(M_1)$ is either $\emptyset$ or $\{w\}$
+- If $M$ accepts $w$: Then $L(M_1) = \{w\} \neq \emptyset$ → $\langle M_1 \rangle \notin E_{TM}$ → $\langle M_1 \rangle \in \overline{E_{TM}}$ ✓
+- If $M$ doesn't accept $w$: Then $L(M_1) = \emptyset$ → $\langle M_1 \rangle \in E_{TM}$ → $\langle M_1 \rangle \notin \overline{E_{TM}}$ ✓
 
-**Verification:**
-- If $M$ accepts $w$: Then $L(M') = \Sigma^* \neq \emptyset$ → $\langle M' \rangle \notin E_{TM}$ ✓
-- If $M$ doesn't accept $w$: Then $L(M') = \emptyset$ → $\langle M' \rangle \in E_{TM}$ ✓
+**The Complete Proof:**
+1. Assume $E_{TM}$ is decidable by TM $R$
+2. Construct TM $S$ that decides $A_{TM}$:
+   ```
+   S = "On input ⟨M, w⟩:
+     1. Use description of M and w to construct TM M_1 (as above).
+     2. Run R on input ⟨M_1⟩.
+     3. If R accepts (L(M_1) = ∅), reject.
+        If R rejects (L(M_1) ≠ ∅), accept."
+   ```
+3. $S$ correctly decides $A_{TM}$:
+   - If $M$ accepts $w$: $L(M_1) = \{w\} \neq \emptyset$, so $R$ rejects, so $S$ accepts ✓
+   - If $M$ doesn't accept $w$: $L(M_1) = \emptyset$, so $R$ accepts, so $S$ rejects ✓
+4. Contradiction! Therefore, $E_{TM}$ is undecidable.
 
-**Conclusion:** If $E_{TM}$ were decidable, we could decide $A_{TM}$ (contradiction). Therefore, $E_{TM}$ is undecidable.
-
-**$A_{TM} \leq_m EQ_{TM}$: The Equivalence Problem**
+**$E_{TM} \leq_m EQ_{TM}$: The Equivalence Problem**
 
 **Definition:** $EQ_{TM} = \{\langle M_1, M_2 \rangle \mid M_1, M_2$ are TMs and $L(M_1) = L(M_2)\}$
 
 **Goal:** Prove $EQ_{TM}$ is undecidable.
 
-**Reduction Strategy:** Use the $E_{TM}$ reduction as a building block.
+**Reduction Strategy:** Reduce $E_{TM}$ to $EQ_{TM}$ (from slides).
 
 **The Reduction:**
-Given $\langle M, w \rangle$, construct:
-- $M_1 = M'$ (from $E_{TM}$ reduction above)
-- $M_2$ = TM that rejects everything (so $L(M_2) = \emptyset$)
+Given $\langle M \rangle$, construct:
+- $M_1$ = TM that rejects all inputs (so $L(M_1) = \emptyset$)
+- $M_2 = M$ (the given TM)
 
-**Claim:** $\langle M, w \rangle \in A_{TM}$ if and only if $\langle M_1, M_2 \rangle \notin EQ_{TM}$
+**The Complete Proof:**
+1. Assume $EQ_{TM}$ is decidable by TM $R$
+2. Construct TM $S$ that decides $E_{TM}$:
+   ```
+   S = "On input ⟨M⟩, where M is a TM:
+     1. Run R on input ⟨M, M_1⟩, where M_1 is a TM that rejects all inputs.
+     2. If R accepts (L(M) = L(M_1) = ∅), accept.
+        If R rejects (L(M) ≠ ∅), reject."
+   ```
+3. $S$ correctly decides $E_{TM}$:
+   - If $L(M) = \emptyset$: Then $L(M) = L(M_1) = \emptyset$, so $R$ accepts, so $S$ accepts ✓
+   - If $L(M) \neq \emptyset$: Then $L(M) \neq L(M_1)$, so $R$ rejects, so $S$ rejects ✓
+4. Contradiction! Therefore, $EQ_{TM}$ is undecidable.
 
-**Verification:**
-- If $M$ accepts $w$: Then $L(M_1) = \Sigma^* \neq \emptyset = L(M_2)$ → not equivalent → $\langle M_1, M_2 \rangle \notin EQ_{TM}$ ✓
-- If $M$ doesn't accept $w$: Then $L(M_1) = \emptyset = L(M_2)$ → equivalent → $\langle M_1, M_2 \rangle \in EQ_{TM}$ ✓
+**Note:** This shows that if we could decide equivalence, we could decide emptiness. Since emptiness is undecidable, equivalence must also be undecidable.
 
-**Conclusion:** If $EQ_{TM}$ were decidable, we could decide $A_{TM}$ (contradiction). Therefore, $EQ_{TM}$ is undecidable.
+**Additional Result (from slides):** $EQ_{TM}$ is neither Turing-recognizable nor co-Turing-recognizable.
+- $A_{TM}$ reduces to $\overline{EQ_{TM}}$ (showing $EQ_{TM}$ is not recognizable)
+- $A_{TM}$ reduces to $EQ_{TM}$ (showing $\overline{EQ_{TM}}$ is not recognizable)
+- This is a stronger result than just undecidability
 
-**Note:** We can also reduce $E_{TM}$ to $EQ_{TM}$ directly: Given $\langle M \rangle$, check if $L(M) = L(M_\emptyset)$ where $M_\emptyset$ rejects everything.
-
-### 6.5 Post Correspondence Problem (PCP)
+### 6.6 Post Correspondence Problem (PCP)
 
 **Definition:** Given a collection of dominoes, each with a top string and bottom string, determine if there exists a sequence of dominoes (with repetition allowed) such that the concatenation of top strings equals the concatenation of bottom strings.
 
-**Example:** Dominoes:
-- Domino 1: $\frac{a}{ab}$ (top: $a$, bottom: $ab$)
-- Domino 2: $\frac{b}{a}$ (top: $b$, bottom: $a$)
-- Domino 3: $\frac{ab}{b}$ (top: $ab$, bottom: $b$)
+**Notation:** A domino is written as $\left[\frac{\text{top}}{\text{bottom}}\right]$
 
-**Solution:** Use dominoes 1, 2, 3, 2:
-- Top: $a \cdot b \cdot ab \cdot b = ababb$
-- Bottom: $ab \cdot a \cdot b \cdot a = ababa$
+**Example:** Collection of dominoes:
+- Domino 1: $\left[\frac{b}{ca}\right]$ (top: $b$, bottom: $ca$)
+- Domino 2: $\left[\frac{a}{ab}\right]$ (top: $a$, bottom: $ab$)
+- Domino 3: $\left[\frac{ca}{a}\right]$ (top: $ca$, bottom: $a$)
+- Domino 4: $\left[\frac{abc}{c}\right]$ (top: $abc$, bottom: $c$)
+
+**Example match:** 
+$\left[\frac{a}{ab}\right], \left[\frac{b}{ca}\right], \left[\frac{ca}{a}\right], \left[\frac{a}{ab}\right], \left[\frac{abc}{c}\right]$
+- Top: $a \cdot b \cdot ca \cdot a \cdot abc = abcacaabc$
+- Bottom: $ab \cdot ca \cdot a \cdot ab \cdot c = abcaabc$
 - Not equal, so this is not a solution.
 
-**Actual solution:** Use domino 1 twice, then domino 2:
-- Top: $a \cdot a = aa$
-- Bottom: $ab \cdot ab = abab$
-- Not equal either.
+**Formal Definition:** 
+$PCP = \{\langle P \rangle \mid P$ is an instance of the Post Correspondence Problem with a match$\}$
 
 **Key Fact:** The Post Correspondence Problem is **undecidable**.
-- This means there is no algorithm that can determine, for an arbitrary set of dominoes, whether a solution exists.
-- Used as a tool to prove other problems undecidable via reduction.
+- **Theorem:** $PCP$ is undecidable
+- **Proof idea:** Reduction from $A_{TM}$ via accepting computation histories
+- This means there is no algorithm that can determine, for an arbitrary set of dominoes, whether a solution exists
+- Used as a tool to prove other problems undecidable via reduction
+
+**For the exam:** You only need to know what the Post Correspondence Problem is and that it is undecidable (you don't need to know the proof).
 
 ---
 
