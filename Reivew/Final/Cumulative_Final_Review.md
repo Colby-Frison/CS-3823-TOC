@@ -159,6 +159,41 @@ Regular Languages
 - Rightmost: Always expand rightmost nonterminal
 - Parse tree: Tree representation of derivation
 
+**Example:** Consider grammar $G$ with productions:
+- $S \to aSb \mid ab$
+
+**Leftmost derivation for string "aabb":**
+$S \Rightarrow aSb \Rightarrow aabb$
+
+(Step 1: Apply $S \to aSb$. Step 2: Apply $S \to ab$ to the middle $S$. At each step, the leftmost nonterminal is expanded.)
+
+**Rightmost derivation for string "aabb":**
+$S \Rightarrow aSb \Rightarrow aabb$
+
+(For this grammar, leftmost and rightmost derivations are the same because there is only one nonterminal at each step)
+
+**Parse tree for "aabb":**
+```
+    S
+   /|\
+  a S b
+   / \
+  a   b
+```
+
+**Example with different leftmost/rightmost derivations:** Grammar:
+- $E \to E + T \mid T$
+- $T \to T * F \mid F$
+- $F \to (E) \mid id$
+
+**Leftmost derivation for "id + id * id":**
+$E \Rightarrow E + T \Rightarrow T + T \Rightarrow F + T \Rightarrow id + T \Rightarrow id + T * F \Rightarrow id + F * F \Rightarrow id + id * F \Rightarrow id + id * id$
+
+**Rightmost derivation for "id + id * id":**
+$E \Rightarrow E + T \Rightarrow E + T * F \Rightarrow E + T * id \Rightarrow E + F * id \Rightarrow E + id * id \Rightarrow T + id * id \Rightarrow F + id * id \Rightarrow id + id * id$
+
+**Notice:** For each step in the left or rightmost derivation, it strictly expands the left or right nonterminal until the nonterminal is replaced by a terminal before moving on to the next nonterminal.
+
 **Chomsky Normal Form (CNF):**
 - All productions: $A \to BC$ or $A \to a$
 - Every CFL has a grammar in CNF
@@ -173,6 +208,28 @@ Regular Languages
 **Ambiguity:**
 - Grammar is ambiguous if some string has multiple leftmost derivations
 - Some languages are inherently ambiguous
+
+**Example of Ambiguous Grammar:** Consider grammar $G$ with productions:
+- $E \to E + E \mid E * E \mid id$
+
+This grammar is ambiguous because the string "id + id * id" has two different leftmost derivations:
+
+**Leftmost Derivation 1** (addition before multiplication):
+$E \Rightarrow E + E \Rightarrow id + E \Rightarrow id + E * E \Rightarrow id + id * E \Rightarrow id + id * id$
+
+**Leftmost Derivation 2** (multiplication before addition):
+$E \Rightarrow E * E \Rightarrow E + E * E \Rightarrow id + E * E \Rightarrow id + id * E \Rightarrow id + id * id$
+
+These correspond to two different parse trees:
+- **Tree 1:** $(id + id) * id$ (addition grouped first)
+- **Tree 2:** $id + (id * id)$ (multiplication grouped first)
+
+**To remove ambiguity:** Use a grammar with precedence rules:
+- $E \to E + T \mid T$ (addition at outer level)
+- $T \to T * F \mid F$ (multiplication at inner level)
+- $F \to (E) \mid id$ (parentheses and identifiers)
+
+This unambiguous grammar forces multiplication to bind tighter than addition.
 
 ### 3.2 Pushdown Automata (PDA)
 
@@ -195,8 +252,33 @@ Regular Languages
 - $c$: Stack symbol to push ($\varepsilon$ = no push)
 
 **Equivalence:** CFG = Nondeterministic PDA
-- **CFG → PDA:** Standard construction (simulate leftmost derivations)
-- **PDA → CFG:** More complex (variables represent state pairs)
+
+**CFG → PDA (Standard Construction):**
+- **Key Idea:** Simulate leftmost derivations using the stack
+- **Construction:**
+  1. Push start symbol $S$ onto stack
+  2. For each production $A \to w$ in grammar:
+     - Add transition: $\varepsilon, A \to w$ (pop $A$, push $w$ in reverse)
+  3. For each terminal $a$:
+     - Add transition: $a, a \to \varepsilon$ (read $a$ from input, pop $a$ from stack)
+  4. Accept by empty stack (or final state)
+- **How it works:** Stack holds the sentential form of leftmost derivation. When nonterminal is on top, expand it. When terminal is on top, match it with input.
+- **Example:** For grammar $S \to aSb \mid ab$, PDA:
+  - $\varepsilon, S \to bSa$ (for $S \to aSb$, reversed)
+  - $\varepsilon, S \to ba$ (for $S \to ab$, reversed)
+  - $a, a \to \varepsilon$ and $b, b \to \varepsilon$ (match terminals)
+
+**PDA → CFG (State Pair Construction):**
+- **Key Idea:** Variables $A_{pq}$ represent "path from state $p$ to state $q$ that empties stack"
+- **Construction:**
+  1. For each transition $\delta(p, a, A) \ni (q, B_1B_2\ldots B_k)$:
+     - Create variables for intermediate states
+     - Add productions: $A_{pq} \to a B_{1,r_1} B_{2,r_2} \ldots B_{k,r_k}$ for all state sequences
+  2. For each transition $\delta(p, a, A) \ni (q, \varepsilon)$:
+     - Add production: $A_{pq} \to a$
+  3. Start variable: $S = A_{q_0,q_{accept}}$ (or all accept states)
+- **Intuition:** $A_{pq}$ generates strings that take PDA from state $p$ to $q$ while popping $A$ from stack
+- **Complexity:** Requires considering all possible intermediate state sequences, leading to many variables
 
 **Deterministic PDAs:** Recognize proper subset of CFLs (deterministic CFLs)
 
@@ -293,41 +375,270 @@ Regular Languages
 
 ### 5.1 Decidable Languages
 
-**Key Examples:**
-- $A_{DFA}$ = $\{\langle M, w \rangle \mid M$ is a DFA that accepts $w\}$ ✓ Decidable
-- $A_{NFA}$ = $\{\langle N, w \rangle \mid N$ is an NFA that accepts $w\}$ ✓ Decidable
-- $A_{REX}$ = $\{\langle R, w \rangle \mid R$ is a regex that matches $w\}$ ✓ Decidable
-- $A_{CFG}$ = $\{\langle G, w \rangle \mid G$ is a CFG that generates $w\}$ ✓ Decidable
-- $E_{DFA}$ = $\{\langle M \rangle \mid M$ is a DFA and $L(M) = \emptyset\}$ ✓ Decidable
-- $EQ_{DFA}$ = $\{\langle M_1, M_2 \rangle \mid M_1, M_2$ are DFAs and $L(M_1) = L(M_2)\}$ ✓ Decidable
+**Definition:** A language $L$ is **decidable** if there exists a Turing machine $M$ (called a **decider**) that:
+- Accepts all strings in $L$
+- Rejects all strings not in $L$
+- **Always halts** on every input
 
-**Techniques:**
-- Simulate the automaton/grammar
-- Use algorithms (e.g., reachability, minimization)
+**Key Examples:**
+
+**$A_{DFA}$ = $\{\langle M, w \rangle \mid M$ is a DFA that accepts $w\}$** ✓ Decidable
+- **Decider:** Simulate $M$ on input $w$ step by step
+- Since DFAs always halt (finite computation), simulation terminates
+- Accept if $M$ ends in accept state, reject otherwise
+- **Time complexity:** $O(|w|)$
+  - **Derivation:** Process each symbol of $w$ exactly once
+  - For each symbol $w[i]$, perform one transition lookup: $\delta(\text{current\_state}, w[i])$
+  - Total operations: $|w|$ transitions, each taking constant time
+  - Therefore: $O(|w|)$
+
+**$A_{NFA}$ = $\{\langle N, w \rangle \mid N$ is an NFA that accepts $w\}$** ✓ Decidable
+- **Decider:** Convert NFA to equivalent DFA (subset construction), then simulate
+- Or: Simulate NFA by tracking all possible states simultaneously
+- **Time complexity:** $O(2^{|Q|} \cdot |w|)$ where $Q$ is set of states
+  - **Derivation (Subset Construction Method):**
+    - **Step 1:** Convert NFA to DFA using subset construction
+      - DFA states are subsets of NFA states
+      - Worst case: $2^{|Q|}$ possible subsets (exponential blowup)
+      - Construction time: $O(2^{|Q|} \cdot |\Sigma|)$ where $\Sigma$ is alphabet
+    - **Step 2:** Simulate resulting DFA on $w$
+      - DFA has at most $2^{|Q|}$ states
+      - Process $|w|$ symbols, each requiring transition lookup
+      - Simulation time: $O(2^{|Q|} \cdot |w|)$
+    - **Total:** $O(2^{|Q|} \cdot |\Sigma|) + O(2^{|Q|} \cdot |w|) = O(2^{|Q|} \cdot |w|)$ (assuming $|w| \geq |\Sigma|$)
+  - **Alternative (Direct Simulation):** Track set of possible states, update for each symbol: also $O(2^{|Q|} \cdot |w|)$
+
+**$A_{REX}$ = $\{\langle R, w \rangle \mid R$ is a regex that matches $w\}$** ✓ Decidable
+- **Decider:** Convert regex to equivalent NFA, then use $A_{NFA}$ decider
+- **Time complexity:** Exponential in worst case (due to NFA conversion)
+  - **Derivation:**
+    - **Step 1:** Convert regex $R$ to NFA
+      - Regex to NFA conversion: $O(|R|)$ states (linear in regex length)
+      - However, regex can be exponentially more concise than equivalent NFA
+    - **Step 2:** Convert NFA to DFA (subset construction)
+      - NFA from regex has $O(|R|)$ states
+      - DFA can have up to $2^{O(|R|)}$ states (exponential blowup)
+      - Example: Regex $(0|1)^*0(0|1)^{n-1}$ requires DFA with $2^n$ states
+    - **Step 3:** Simulate DFA on $w$: $O(2^{|R|} \cdot |w|)$
+    - **Total:** Exponential in $|R|$ due to subset construction
+
+**$A_{CFG}$ = $\{\langle G, w \rangle \mid G$ is a CFG that generates $w\}$** ✓ Decidable
+- **Decider:** Use CYK algorithm or convert to CNF and check all derivations
+- For CNF: Check all possible parse trees of length $2|w|-1$ (since CNF trees are binary)
+- **Time complexity:** $O(|w|^3 \cdot |G|)$ for CYK algorithm
+  - **Derivation (CYK Algorithm):**
+    - **Prerequisite:** Grammar must be in Chomsky Normal Form (CNF)
+    - **Algorithm:** Fill dynamic programming table $T[i,j]$ = set of nonterminals generating substring $w[i..j]$
+    - **Table size:** $|w| \times |w| = |w|^2$ cells
+    - **For each cell $T[i,j]$:**
+      - Consider all splits: $k$ from $i$ to $j-1$ (at most $|w|$ splits)
+      - For each split, check all productions $A \to BC$ in grammar
+      - If $B \in T[i,k]$ and $C \in T[k+1,j]$, add $A$ to $T[i,j]$
+      - Work per cell: $O(|w| \cdot |G|)$ where $|G|$ is number of productions
+    - **Total cells:** $O(|w|^2)$
+    - **Total time:** $O(|w|^2) \times O(|w| \cdot |G|) = O(|w|^3 \cdot |G|)$
+  - **Note:** Converting to CNF adds polynomial overhead, but doesn't change asymptotic complexity
+
+**$E_{DFA}$ = $\{\langle M \rangle \mid M$ is a DFA and $L(M) = \emptyset\}$** ✓ Decidable
+- **Decider:** Check if any accept state is reachable from start state
+- Use graph reachability (BFS/DFS) on DFA's state diagram
+- Accept if no accept state reachable, reject otherwise
+- **Time complexity:** $O(|Q| + |\delta|)$ where $Q$ is states, $\delta$ is transitions
+  - **Derivation:**
+    - Model DFA as directed graph: states = vertices, transitions = edges
+    - **Graph representation:** Adjacency list (each state stores its outgoing transitions)
+    - **BFS/DFS traversal:**
+      - Visit each state at most once: $O(|Q|)$
+      - Traverse each transition (edge) at most once: $O(|\delta|)$
+      - Check if visited state is accepting: $O(1)$ per state
+    - **Total:** $O(|Q| + |\delta|)$
+  - **Note:** $|\delta| = |Q| \times |\Sigma|$ for complete DFA, so complexity is $O(|Q| \cdot |\Sigma|)$
+
+**$EQ_{DFA}$ = $\{\langle M_1, M_2 \rangle \mid M_1, M_2$ are DFAs and $L(M_1) = L(M_2)\}$** ✓ Decidable
+
+**Method 1: Symmetric Difference (Standard Method)**
+- **Key Idea:** $L(M_1) = L(M_2)$ if and only if their symmetric difference is empty
+- **Symmetric difference:** $L(M_1) \triangle L(M_2) = (L(M_1) \cap \overline{L(M_2)}) \cup (\overline{L(M_1)} \cap L(M_2))$
+- **Algorithm:**
+  1. Construct DFA $C$ for symmetric difference using closure properties:
+     - Complement $L(M_2)$ to get $\overline{L(M_2)}$
+     - Intersect $L(M_1)$ with $\overline{L(M_2)}$ to get $L(M_1) \cap \overline{L(M_2)}$
+     - Complement $L(M_1)$ to get $\overline{L(M_1)}$
+     - Intersect $\overline{L(M_1)}$ with $L(M_2)$ to get $\overline{L(M_1)} \cap L(M_2)$
+     - Union the two intersections to get $C$
+  2. Use $E_{DFA}$ decider on $C$
+  3. If $L(C) = \emptyset$, then $L(M_1) = L(M_2)$ (accept)
+  4. Otherwise, $L(M_1) \neq L(M_2)$ (reject)
+- **Why it works:** Two languages are equal iff their symmetric difference is empty
+- **Time complexity:** Polynomial (product construction + reachability)
+  - **Derivation:**
+    - Let $M_1$ have $n$ states, $M_2$ have $m$ states, alphabet size $|\Sigma|$
+    - **Step 1: Complement operations** (2 operations)
+      - Complement DFA: Swap accept/reject states
+      - Time: $O(1)$ (just relabeling)
+    - **Step 2: Intersection operations** (2 operations)
+      - Product construction: Create DFA with $n \times m$ states
+      - Each state $(q_1, q_2)$ has transitions for each symbol in $\Sigma$
+      - Construction time: $O(n \cdot m \cdot |\Sigma|)$
+    - **Step 3: Union operation** (1 operation)
+      - Union of two DFAs: Similar product construction
+      - Result has at most $n \cdot m \times n \cdot m = (nm)^2$ states
+      - Construction time: $O((nm)^2 \cdot |\Sigma|)$
+    - **Step 4: Emptiness check** on resulting DFA $C$
+      - $C$ has at most $(nm)^2$ states
+      - Reachability check: $O((nm)^2 \cdot |\Sigma|)$
+    - **Total:** $O((nm)^2 \cdot |\Sigma|)$ = polynomial in input size
+
+**Method 2: Testing All Strings Up to a Certain Size**
+- **Key Idea:** If $L(M_1) \neq L(M_2)$, there exists a distinguishing string of bounded length
+- **Bound:** If $M_1$ has $n$ states and $M_2$ has $m$ states, test all strings up to length $n \cdot m - 1$
+- **Reasoning:**
+  - Construct product DFA $P$ for $L(M_1) \triangle L(M_2)$ (symmetric difference)
+  - $P$ has at most $n \times m$ states
+  - If $L(P)$ is nonempty, by pumping lemma (or shortest path property), there exists a string $w \in L(P)$ with length $< n \cdot m$
+  - This $w$ distinguishes $M_1$ and $M_2$ (accepted by exactly one)
+- **Algorithm:**
+  1. For each string $w$ of length $0$ to $n \cdot m - 1$:
+     - Test if $M_1$ accepts $w$ and $M_2$ rejects $w$, or vice versa
+     - If such $w$ found, **reject** (languages differ)
+  2. If no distinguishing string found, **accept** (languages equal)
+- **Number of strings to test:** $\sum_{i=0}^{n \cdot m - 1} |\Sigma|^i$ where $\Sigma$ is alphabet
+- **Time complexity:** Exponential in $n \cdot m$
+  - **Derivation:**
+    - Number of strings of length $i$: $|\Sigma|^i$
+    - Total strings to test: $\sum_{i=0}^{nm-1} |\Sigma|^i = \frac{|\Sigma|^{nm} - 1}{|\Sigma| - 1} = O(|\Sigma|^{nm})$
+    - For each string $w$:
+      - Simulate $M_1$ on $w$: $O(|w|) = O(nm)$
+      - Simulate $M_2$ on $w$: $O(|w|) = O(nm)$
+      - Compare results: $O(1)$
+    - **Total:** $O(|\Sigma|^{nm} \cdot nm)$ = exponential in $nm$
+  - **Note:** This method is exponentially worse than Method 1 but demonstrates the bound on distinguishing string length
+
+**Techniques for Proving Decidability:**
+1. **Simulation:** Directly simulate the automaton/grammar on input
+2. **Reachability:** Use graph algorithms to check state/configuration reachability
+3. **Closure Properties:** Build new automata using closure operations (union, intersection, complement)
+4. **Algorithmic Methods:** Use known algorithms (CYK, minimization, etc.)
 
 ### 5.2 Undecidable Languages
 
+**Definition:** A language $L$ is **undecidable** if no Turing machine can decide it (i.e., no TM always halts and correctly accepts/rejects all inputs).
+
 **Key Examples:**
-- $A_{TM}$ = $\{\langle M, w \rangle \mid M$ is a TM that accepts $w\}$ ✗ Undecidable
-- $HALT_{TM}$ = $\{\langle M, w \rangle \mid M$ is a TM that halts on $w\}$ ✗ Undecidable
-- $E_{TM}$ = $\{\langle M \rangle \mid M$ is a TM and $L(M) = \emptyset\}$ ✗ Undecidable
-- $EQ_{TM}$ = $\{\langle M_1, M_2 \rangle \mid M_1, M_2$ are TMs and $L(M_1) = L(M_2)\}$ ✗ Undecidable
 
-**Proof Technique:** Diagonalization and self-reference
+**$A_{TM}$ = $\{\langle M, w \rangle \mid M$ is a TM that accepts $w\}$** ✗ Undecidable
+- **Why undecidable:** TMs can loop forever. We cannot determine if a TM will accept without running it, but running it might never halt.
+- **Proof sketch (Diagonalization):**
+  1. Assume $A_{TM}$ is decidable by decider $H$
+  2. Construct TM $D$ that: On input $\langle M \rangle$, runs $H$ on $\langle M, \langle M \rangle \rangle$
+  3. $D$ accepts if $H$ rejects, $D$ rejects if $H$ accepts
+  4. Consider $D$ on input $\langle D \rangle$: Contradiction!
+  5. Therefore, $H$ cannot exist
+- **Key insight:** Self-reference creates paradox (like "This statement is false")
 
-**The Halting Problem:**
-- Most famous undecidable problem
-- No algorithm can determine if a TM halts on given input
-- Proved by contradiction (assume decider exists, construct contradiction)
+**$HALT_{TM}$ = $\{\langle M, w \rangle \mid M$ is a TM that halts on $w\}$** ✗ Undecidable
+- **Why undecidable:** If we could decide halting, we could decide $A_{TM}$ (run TM, if it halts, check if it accepted)
+- **Proof:** Reduction from $A_{TM}$
+  - Assume $HALT_{TM}$ is decidable by decider $H$
+  - To decide $A_{TM}$ on $\langle M, w \rangle$:
+    1. Run $H$ on $\langle M, w \rangle$ (check if $M$ halts on $w$)
+    2. If no, reject (doesn't accept)
+    3. If yes, simulate $M$ on $w$ until it halts, then check if it accepted
+  - This would decide $A_{TM}$, contradiction!
+  - Therefore, $HALT_{TM}$ is undecidable
+
+**$E_{TM}$ = $\{\langle M \rangle \mid M$ is a TM and $L(M) = \emptyset\}$** ✗ Undecidable
+- **Why undecidable:** To check if language is empty, we'd need to check all possible inputs (infinite), or determine if TM accepts anything (which is $A_{TM}$)
+- **Proof:** Reduction from $A_{TM}$
+  - Given $\langle M, w \rangle$, construct $M'$ that: ignores input, simulates $M$ on $w$, accepts if $M$ accepts $w$
+  - $L(M') = \Sigma^*$ if $M$ accepts $w$, else $L(M') = \emptyset$
+  - If $E_{TM}$ were decidable, we could decide $A_{TM}$: check if $L(M') = \emptyset$
+
+**$EQ_{TM}$ = $\{\langle M_1, M_2 \rangle \mid M_1, M_2$ are TMs and $L(M_1) = L(M_2)\}$** ✗ Undecidable
+- **Why undecidable:** Special case: check if TM equals fixed TM (e.g., one that accepts nothing)
+- **Proof:** Reduction from $E_{TM}$
+  - Given $\langle M \rangle$, check if $L(M) = L(M_\emptyset)$ where $M_\emptyset$ rejects everything
+  - If $EQ_{TM}$ were decidable, $E_{TM}$ would be decidable, contradiction
+
+**Proof Techniques:**
+
+**1. Diagonalization:**
+- Create a "diagonal" TM that differs from every TM on the diagonal
+- Self-reference leads to contradiction
+- Example: $A_{TM}$ proof
+
+**2. Reduction:**
+- Show that if problem $B$ were decidable, then known undecidable problem $A$ would be decidable
+- Since $A$ is undecidable, $B$ must be undecidable
+- Example: $HALT_{TM}$, $E_{TM}$, $EQ_{TM}$ proofs
+
+**The Halting Problem ($HALT_{TM}$):**
+- **Most famous undecidable problem** - foundational result in computability
+- **Statement:** No algorithm can determine if an arbitrary TM halts on arbitrary input
+- **Implications:**
+  - Cannot write perfect program analyzer (detect infinite loops)
+  - Cannot write perfect compiler optimizer
+  - Fundamental limit of computation
+- **Proof outline:**
+  1. Assume decider $H$ exists for $HALT_{TM}$
+  2. Construct contradictory TM $D$ using $H$
+  3. $D$ on $\langle D \rangle$ creates logical paradox
+  4. Therefore, $H$ cannot exist
 
 ### 5.3 Recognizable but Not Decidable
 
+**Definition:** A language $L$ is **Turing-recognizable** (recursively enumerable) if there exists a TM $M$ that:
+- Accepts all strings in $L$
+- May loop forever on strings not in $L$
+- Does **not** need to reject (only needs to accept strings in $L$)
+
+**Key Relationship:** Decidable ⊆ Recognizable
+- Every decidable language is recognizable (decider is also recognizer)
+- But not every recognizable language is decidable
+
 **Examples:**
-- $A_{TM}$ is recognizable but not decidable
-- $E_{TM}$ is not recognizable (and not decidable)
-- Complement of recognizable language may not be recognizable
+
+**$A_{TM}$ is recognizable but not decidable:**
+- **Recognizable:** TM $U$ (universal TM) simulates $M$ on $w$
+  - If $M$ accepts $w$, $U$ accepts
+  - If $M$ rejects or loops, $U$ loops
+  - This recognizes $A_{TM}$ (accepts when $M$ accepts)
+- **Not decidable:** Proved by diagonalization (see 5.2)
+- **Key insight:** We can recognize acceptance, but cannot always detect rejection/looping
+
+**$E_{TM}$ is not recognizable (and not decidable):**
+- **Not recognizable:** To recognize $E_{TM}$, we'd need to verify that TM accepts nothing
+- But checking all inputs is impossible (infinite)
+- If we find one accepting input, we know language is non-empty
+- But if we never find one, we can't tell if it's empty or we haven't checked enough
+- **Proof:** If $E_{TM}$ were recognizable, then $\overline{E_{TM}}$ would be recognizable
+  - But then both would be recognizable, making $E_{TM}$ decidable (contradiction)
+
+**Complement of recognizable language may not be recognizable:**
+- **Example:** $A_{TM}$ is recognizable, but $\overline{A_{TM}}$ is not recognizable
+- **Proof:** If $\overline{A_{TM}}$ were recognizable, then both $A_{TM}$ and $\overline{A_{TM}}$ would be recognizable
+- By key fact below, $A_{TM}$ would be decidable (contradiction!)
 
 **Key Fact:** If $L$ and $\overline{L}$ are both recognizable, then $L$ is decidable
+- **Proof:** Construct decider for $L$:
+  - Run recognizer for $L$ and recognizer for $\overline{L}$ in parallel (alternating steps)
+  - Since every string is in either $L$ or $\overline{L}$, one recognizer must eventually accept
+  - If $L$'s recognizer accepts first, accept
+  - If $\overline{L}$'s recognizer accepts first, reject
+  - This always halts and correctly decides $L$
+
+**Summary Table:**
+
+| Language | Decidable? | Recognizable? |
+|----------|------------|---------------|
+| $A_{DFA}$ | ✓ Yes | ✓ Yes |
+| $A_{NFA}$ | ✓ Yes | ✓ Yes |
+| $A_{CFG}$ | ✓ Yes | ✓ Yes |
+| $A_{TM}$ | ✗ No | ✓ Yes |
+| $HALT_{TM}$ | ✗ No | ✓ Yes |
+| $E_{TM}$ | ✗ No | ✗ No |
+| $EQ_{TM}$ | ✗ No | ✗ No |
+| $\overline{A_{TM}}$ | ✗ No | ✗ No |
 
 ---
 
